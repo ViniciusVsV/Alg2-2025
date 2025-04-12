@@ -1,6 +1,10 @@
 #ifndef Algoritmos
 #define Algoritmos
 
+void* salvaResultado();
+//Função para salvar os resultados de cada algoritmo em seus respectivos arquivos
+//Diminui repetição de código
+
 void* insertionSort(int* vet, int tam);
 //Implementação Insertion Sort
 
