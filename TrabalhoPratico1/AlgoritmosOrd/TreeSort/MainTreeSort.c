@@ -5,7 +5,7 @@
 
 int main(){
     FILE* arq;
-    arq = fopen("resultados/resultado.csv" , "w");
+    arq = fopen("resultados/resultadoTreeSort.csv" , "w");
     fprintf(arq , "Index,Tipo de Ordenação,Quantidade de posições de vetor,Tempo de execução(seg)\n");
 
     int quantidade_entrada[] = {2000 , 10000 , 50000, 250000 , 500000 , 1000000};
