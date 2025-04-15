@@ -1,13 +1,10 @@
 #ifndef Geradoras
 #define Geradoras
 
-void imprimeVetor(int *vet, int tam);
+int *geraAleatorios(int tam, int semente);
 
-int *geraVetor(int tam, int porcentagemOrdenada);
-//Para gerar um vetor ALEATÓRIO: porcentagemOrdenada = 0
-//Para gerar um vetor ORDENADO: porcentagemOrdenada = 100
-//Para gerar um vetor PARCIALMENTE ORDENADO: 0 < porcentagemOrdenada < 100
-//Para gerar um vetor DECRESCENTE: porcentagemOrdenada = -1
+int *geraQuaseOrdenados(int tam, int porcentagem);
 
+int *geraOrdenados(int tam, int ordem);
 
 #endif

@@ -4,32 +4,28 @@
 #include <stdlib.h>
 #include <time.h>
 
-void imprimeVetor(int *vet, int tam) {
-    for(int i = 0; i < tam; i++) {
-        printf("%d ", vet[i]);
+int *geraAleatorios(int tam, int semente){
+    //Alocação dinâmica do vetor;
+	int *vet = (int *) malloc(sizeof(int) * tam);
+    if(!vet) return NULL;
+
+    //Preenchimento aleatório;
+    srand(semente);
+
+    for(int i = 0; i < tam; i++){
+      vet[i] = rand();
     }
 
-    printf("\n");
+    return vet;
 }
 
-int *geraVetor(int tam, int porcentagemOrdenada) {
+int *geraQuaseOrdenado(int tam, int porcentagemOrdenada) {
     //Cálculo do tamanho da parte ordenada do vetor;
     int tamOrdenado = tam * porcentagemOrdenada / 100;
 
     //Alocação dinâmica do vetor;
     int *vet = (int *) malloc(sizeof(int) * tam);
     if(!vet) return NULL;
-
-    //Preenche o vetor em ordem DECRSCENTE;
-    if(porcentagemOrdenada == -1) {
-        for(int i = 0; i < tam; i++) {
-            vet[i] = tam - i;
-        }
-
-        imprimeVetor(vet, tam);
-
-        return vet;
-    }
 
     //Preenchimento da parte ordenada do vetor;
     for(int i = 0; i < tamOrdenado; i++) {
@@ -40,11 +36,27 @@ int *geraVetor(int tam, int porcentagemOrdenada) {
     srand(time(NULL));
 
     for(int i = tamOrdenado; i < tam; i++) {
-        if(tamOrdenado > 0) vet[i] = vet[tamOrdenado - 1] + rand(); //Caso o vetor tenha uma parte ordenada;
-        else vet[i] = rand(); //Caso o vetor seja TOTALMENTE desordenado;
+        vet[tamOrdenado - 1] + rand();
     }
 
-    imprimeVetor(vet, tam);
+    return vet;
+}
+
+int *geraOrdenados(int tam, int ordem) {
+    //Alocação dinâmica do vetor;
+    int *vet = (int *) malloc(sizeof(int) * tam);
+    if(!vet) return NULL;
+
+    if(ordem == 1) {//Preenchimento decrescente
+        for(int i = 0; i < tam; i++) {
+            vet[i] = tam - i;
+        }
+    }
+    else if(ordem == 0) {//Preenchimento crescente
+        for(int i = 0; i < tam; i++) {
+            vet[i] = i;
+        }
+    }
 
     return vet;
 }
