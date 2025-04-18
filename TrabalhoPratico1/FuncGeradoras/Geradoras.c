@@ -1,9 +1,16 @@
-#include "Geradoras.h"
+// Desenvolvido por Gustavo Senador, revisado e comentado por Lucas Albuquerque
+// 17/04/2025
+// Universidade Federal de Itajubá - UNIFEI
 
+//Bibliotecas;
+//
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "Geradoras.h"
 
+// Gera um vetor totalmente aleatório;
+//
 int *geraAleatorios(int tam, int semente){
     //Alocação dinâmica do vetor;
 	int *vet = (int *) malloc(sizeof(int) * tam);
@@ -19,6 +26,8 @@ int *geraAleatorios(int tam, int semente){
     return vet;
 }
 
+// Gera um vetor parte ordenado e parte desordenado;
+//
 int *geraQuaseOrdenado(int tam, int porcentagemOrdenada) {
     //Cálculo do tamanho da parte ordenada do vetor;
     int tamOrdenado = tam * porcentagemOrdenada / 100;
@@ -42,6 +51,8 @@ int *geraQuaseOrdenado(int tam, int porcentagemOrdenada) {
     return vet;
 }
 
+// Gera um vetor totalmente ordenado;
+//
 int *geraOrdenados(int tam, int ordem) {
     //Alocação dinâmica do vetor;
     int *vet = (int *) malloc(sizeof(int) * tam);

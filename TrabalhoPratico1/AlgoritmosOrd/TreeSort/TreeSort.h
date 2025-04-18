@@ -10,6 +10,6 @@ no *criaNo(int valor);
 
 void inserirNo(arvore* arv, no* novo);
 
-void travessiaMorris(arvore *arv, int *vetOrdenado);
+int travessiaMorris(arvore *arv, int *vetOrdenado);
 
 #endif

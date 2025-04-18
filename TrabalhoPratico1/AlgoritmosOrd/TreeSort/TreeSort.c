@@ -87,25 +87,14 @@ void inserirNo(arvore* arv , no* novo){
 
 // Percorrimento in-order utilizando a travessia de Morris, onde acontece a ordenação de fato;
 //
-void emOrdem(no* raiz , int* vetOrdem , int* VetIndex){
-    if(!raiz) return; // Previne erros na alocação de memória;
-
-    emOrdem(raiz->esq , vetOrdem , VetIndex);
-
-    vetOrdem[*VetIndex] = raiz->valor;
-    (*VetIndex)++;
-
-    emOrdem(raiz->dir , vetOrdem , VetIndex);
-}
-
-void travessiaMorris(arvore *arv, int *vetOrdenado) {
+int travessiaMorris(arvore *arv, int *vetOrdenado) {
+    int contador = 0; // Armazena cada passo na árvore
     no *atual = arv->raiz; // Toda arvore será percorrida iniciando de sua raíz;
     no *predecessor;
 
     int i = 0; // Marca a posição atual do vetor;
 
-// Percorre toda a lista
-//
+    // Percorre toda a lista
     while (atual) {
 // Caso o elemento seja o menor da sua sub-árvore;
 //
@@ -114,6 +103,7 @@ void travessiaMorris(arvore *arv, int *vetOrdenado) {
             i++;
 
             atual = atual->dir; // Passa para o próximo;
+            contador++;
         }
         else {
 // Busca o predecessor do nó atual;
@@ -121,6 +111,7 @@ void travessiaMorris(arvore *arv, int *vetOrdenado) {
             predecessor = atual->esq;
             while (predecessor->dir && predecessor->dir != atual) {
                 predecessor = predecessor->dir;
+                contador++;
             }
 
 // Caso o predecessor não tenha ligação para o nó atual, essa ligação é criada temporariamente;
@@ -128,13 +119,19 @@ void travessiaMorris(arvore *arv, int *vetOrdenado) {
             if (!predecessor->dir) {
                 predecessor->dir = atual;
                 atual = atual->esq;
+
+                contador++;
             }
             else {
                 predecessor->dir = NULL; // Remoção do link temporário;
                 vetOrdenado[i] = atual->valor; // Posiciona o elemento no vetor em sua posição correta;
                 i++;
+
                 atual = atual->dir; // Passa para o próximo;
+                contador++;
             }
         }
     }
+
+    return contador;
 }

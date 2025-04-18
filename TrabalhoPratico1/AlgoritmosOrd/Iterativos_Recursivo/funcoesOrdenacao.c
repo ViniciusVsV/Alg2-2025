@@ -147,12 +147,12 @@ void merge(int* vetor , int inicio , int meio , int fim){
     // Vetor da esquerda;
     int tamVetEsq = meio - inicio + 1;
     int* vetEsq = (int*)malloc(sizeof(int) * tamVetEsq);
-
+    if(!vetEsq) return;
 
     // Vetor da direita;
     int tamVetDir = fim - meio;
     int* vetDir = (int*)malloc(sizeof(int) * tamVetDir);
-
+    if(!vetDir) return;
 
     // Vetor auxiliar;
     int* vetAux = (int*)malloc(sizeof(int) * (tamVetEsq + tamVetDir));
