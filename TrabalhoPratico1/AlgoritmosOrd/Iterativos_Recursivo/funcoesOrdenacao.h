@@ -1,8 +1,6 @@
 #ifndef FUNCOESORDENACAO
 #define FUNCOESORDENACAO
 
-int* preencherVetor(int quant);
-
 double bubbleSort(int* vetor , int tamanho);
 
 double bubbleSortInteligente(int* vetor, int tamanho);

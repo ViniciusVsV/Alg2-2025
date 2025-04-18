@@ -2,20 +2,14 @@
 #define TREE_SORT
 
 typedef struct no no;
+typedef struct arvore arvore;
 
-typedef struct lista {
-    no* pai;
-    int quant;
-} lista;
+arvore *criaArvore();
 
-lista* crialista();
+no *criaNo(int valor);
 
-no* criano(int dado);
+void inserirNo(arvore* arv, no* novo);
 
-void inserirLista(lista* lista , no* novo);
-
-int* preencherVetor(int quant);
-
-void emOrdem(no* raiz , int* vetOrdem , int* VetIndex);
+void travessiaMorris(arvore *arv, int *vetOrdenado);
 
 #endif

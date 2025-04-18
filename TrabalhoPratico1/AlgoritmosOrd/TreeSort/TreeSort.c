@@ -1,88 +1,140 @@
+// Desenvolvido por Gustavo Senador, revisado e comentado por Lucas Albuquerque
+// 17/04/2025
+// Universidade Federal de Itajubá - UNIFEI
+
+//Bibliotecas;
+//
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include "TreeSort.h"
 
+// Definindo os dados do nó da árvore;
+//
 struct no{
-    int dado;
-    struct no* direita;
-    struct no* esquerda;
+    int valor;
+    struct no* dir;
+    struct no* esq;
 };
 
+// Definindo os dados da árvore;
+//
+struct arvore {
+    no* raiz;
+    int qtd;
+};
 
-lista* crialista(){
-    lista* nova = (lista*)malloc(sizeof(lista));
-    if(nova == NULL) return NULL;
+// Aloca uma nova árvore;
+//
+arvore* criaArvore(){
+    arvore* nova = (arvore *) malloc(sizeof(arvore));
+    if(!nova) return NULL;
 
-    nova->pai = NULL;
-    nova->quant = 0;
+    nova->raiz = NULL;
+    nova->qtd = 0;
 
     return nova;
 }
 
-no* criano(int dado){
-    no* novo = (no*)malloc(sizeof(no));
-    if(novo == NULL) return NULL;
+// Aloca um novo nó com o seu valor passado por parâmetro;
+//
+no* criaNo(int valor){
+    no* novo = (no *) malloc(sizeof(no));
+    if(!novo) return NULL;
 
-    novo->dado = dado;
-    novo->direita = NULL;
-    novo->esquerda = NULL;
+    novo->valor = valor;
+    novo->dir = NULL;
+    novo->esq = NULL;
 
     return novo;
 }
 
-void inserirLista(lista* lista , no* novo){
-    if((lista == NULL) || (novo == NULL)) return;
+// Insere um nó em uma árvore;
+//
+void inserirNo(arvore* arv , no* novo){
+    if(!arv || !novo) return; // Previne erros na alocação de memória;
 
-    if(lista->pai == NULL){
-        lista->pai = novo;
-        lista->quant++;
+// Caso seja o primeiro elemento da árvore;
+//
+    if(!arv->raiz){
+        arv->raiz = novo;
+        arv->qtd++;
         return;
     }
 
-    no* atual = lista->pai;
+// Percorrimento até encontrar a posição correta do elemento;
+//
+    no* atual = arv->raiz;
     no* ant = NULL;
 
-    while(atual != NULL){
+    while(atual){
         ant = atual;
 
-        if(atual->dado > novo->dado)
-            atual = atual->esquerda;
+        if(atual->valor > novo->valor)
+            atual = atual->esq;
         else
-            atual = atual->direita;
+            atual = atual->dir;
     }
 
-    if(novo->dado < ant->dado)
-        ant->esquerda = novo;
-    
-    else
-        ant->direita = novo;
-    
-    lista->quant++;
-    return;
+    if(novo->valor < ant->valor) {
+        ant->esq = novo;
+    }
+    else {
+        ant->dir = novo;
+    }
+
+    arv->qtd++;
 }
 
-int* preencherVetor(int quant){
-    int* vetor = (int*)malloc(sizeof(int) * quant);
-
-    srand(time(NULL));
-
-    for(int i = 0 ; i < quant ; i++)
-        vetor[i] = (rand() % 100) + 1;
-
-    return vetor;
-}
-
+// Percorrimento in-order utilizando a travessia de Morris, onde acontece a ordenação de fato;
+//
 void emOrdem(no* raiz , int* vetOrdem , int* VetIndex){
-    if(raiz == NULL) return;
+    if(!raiz) return; // Previne erros na alocação de memória;
 
-    emOrdem(raiz->esquerda , vetOrdem , VetIndex);
+    emOrdem(raiz->esq , vetOrdem , VetIndex);
 
-    vetOrdem[*VetIndex] = raiz->dado;
+    vetOrdem[*VetIndex] = raiz->valor;
     (*VetIndex)++;
 
-    emOrdem(raiz->direita , vetOrdem , VetIndex);
+    emOrdem(raiz->dir , vetOrdem , VetIndex);
 }
 
+void travessiaMorris(arvore *arv, int *vetOrdenado) {
+    no *atual = arv->raiz; // Toda arvore será percorrida iniciando de sua raíz;
+    no *predecessor;
 
+    int i = 0; // Marca a posição atual do vetor;
 
+// Percorre toda a lista
+//
+    while (atual) {
+// Caso o elemento seja o menor da sua sub-árvore;
+//
+        if (!atual->esq) {
+            vetOrdenado[i] = atual->valor; // Armazena o elemento atual no vetor ordenado;
+            i++;
+
+            atual = atual->dir; // Passa para o próximo;
+        }
+        else {
+// Busca o predecessor do nó atual;
+//
+            predecessor = atual->esq;
+            while (predecessor->dir && predecessor->dir != atual) {
+                predecessor = predecessor->dir;
+            }
+
+// Caso o predecessor não tenha ligação para o nó atual, essa ligação é criada temporariamente;
+//
+            if (!predecessor->dir) {
+                predecessor->dir = atual;
+                atual = atual->esq;
+            }
+            else {
+                predecessor->dir = NULL; // Remoção do link temporário;
+                vetOrdenado[i] = atual->valor; // Posiciona o elemento no vetor em sua posição correta;
+                i++;
+                atual = atual->dir; // Passa para o próximo;
+            }
+        }
+    }
+}
