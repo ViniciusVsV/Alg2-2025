@@ -1,0 +1,11 @@
+[project]
+name = "videos"
+version = "0.1.0"
+description = "Criação de vídeos para auxiliar na exemplificação do funcionamento do código"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "audioop-lts>=0.2.1",
+    "manim>=0.18.1",
+    "manim-dsa>=0.2.0",
+]
