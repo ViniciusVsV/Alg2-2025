@@ -84,7 +84,7 @@ void inserirNo(arvore* arv, no* novo, long long* comparacoes, long long* trocas)
 
 // Percorrimento in-order utilizando a travessia de Morris, onde acontece a ordenação de fato;
 //
-int travessiaMorris(arvore* arv, int* vetOrdenado, long long* comparacoes) {
+void travessiaMorris(arvore* arv, int* vetOrdenado, long long* comparacoes) {
     int i = 0;
     no* atual = arv->raiz;
     no* predecessor;
@@ -111,7 +111,6 @@ int travessiaMorris(arvore* arv, int* vetOrdenado, long long* comparacoes) {
         }
     }
 
-    return i;
 }
 
 void executarTreeSort(int* vetor, int tam, long long* comparacoes, long long* trocas) {
