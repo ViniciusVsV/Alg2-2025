@@ -1,21 +1,19 @@
 #ifndef FUNCOESORDENACAO
 #define FUNCOESORDENACAO
 
-double bubbleSort(int* vetor , int tamanho);
-
-double bubbleSortInteligente(int* vetor, int tamanho);
-
-double selectionSort(int* vetor , int tam);
-
-double insertionSort(int* vetor , int tam);
-
-void mergeSort(int*vetor , int inicio , int fim);
-void merge(int* vetor , int inicio , int meio , int fim);
 
 
-void trocar(int* a, int* b);
-int medianaDeCinco(int* vetor, int inicio, int fim);
-void quickSort(int* vetor , int inicio , int fim);
-int particiona(int* vetor , int inicio , int fim);
+void selectionSort(int* vetor, int tam, long long* comparacoes, long long* trocas);
+
+void insertionSort(int* vetor, int tam, long long* comparacoes, long long* trocas);
+
+void mergeSort(int* vetor, int inicio, int fim, long long* comparacoes, long long* trocas);
+void merge(int* vetor, int inicio, int meio, int fim, long long* comparacoes, long long* trocas);
+
+
+void trocar(int* a, int* b, long long* trocas);
+int medianaDeCinco(int* vetor, int inicio, int fim, long long* comparacoes, long long* trocas);
+void quickSort(int* vetor, int inicio, int fim, long long* comparacoes, long long* trocas);
+int particiona(int* vetor, int inicio, int fim, long long* comparacoes, long long* trocas);
 
 #endif  
