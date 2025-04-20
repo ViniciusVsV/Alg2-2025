@@ -91,7 +91,7 @@ void executarAlgoritmo(int indice, int* vetor, int tam) {
             mergeSort(vetor, 0, tam - 1);
             break;
         case 3:
-            quickSort(vetor, 0, tam - 1);  // <- alvo principal para testes
+            quickSort(vetor, 0, tam - 1);  
             break;
         case 4:
             executarTreeSort(vetor, tam);
