@@ -217,41 +217,108 @@ void merge(int* vetor , int inicio , int meio , int fim){
     free(vetDir);
     free(vetAux);
 }
+#define TAMANHO_PILHA 1024  // Tamanho máximo da pilha auxiliar
 
-// Implementação do QuickSort;
-//
-void quickSort(int* vetor , int inicio , int fim){
-    if(inicio < fim){ // Condição de parada implícita, com objetivo de minimizar o uso do return;
-        int pivo = particiona(vetor , inicio , fim); // Elemento já ordenado. Serve de parâmetro para as outras chamadas;
-        quickSort(vetor , inicio , pivo - 1); // Ordenação na parte esquerda do vetor;
-        quickSort(vetor , pivo + 1 , fim); // Ordenação na parte direita do vetor;
-    }
+// Função para trocar dois elementos de lugar
+void trocar(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
 }
 
-// Busca a posição correta do pivô utilizado nas próximas chamadas e ordena o vetor parcialmente
-//
-int particiona(int* vetor , int inicio , int fim){
-    int pos = inicio; // Marca a posição em que ficará o pivô;
-    int aux;
+// Seleciona a mediana de cinco elementos para usar como pivô
+int medianaDeCinco(int* vetor, int inicio, int fim) {
+    int meio = inicio + (fim - inicio) / 2;
+    int q1 = inicio + (meio - inicio) / 2;
+    int q3 = meio + (fim - meio) / 2;
 
-//Busca a nova posição do pivô e posiciona os valores menores e maiores que ele a esquerda e direita, reespectivamente;
-//
-    for(int i = inicio + 1 ; i <= fim; i++){
-        if(vetor[i] < vetor[inicio]){
-            pos++;
-            if(pos != i){ // Evita troca de um mesmo elemento;
-                aux = vetor[i];
-                vetor[i] = vetor[pos];
-                vetor[pos] = aux;
+    // Ordena cinco elementos para aproximar a mediana real
+    if (vetor[inicio] > vetor[q1]) trocar(&vetor[inicio], &vetor[q1]);
+    if (vetor[q1] > vetor[meio]) trocar(&vetor[q1], &vetor[meio]);
+    if (vetor[meio] > vetor[q3]) trocar(&vetor[meio], &vetor[q3]);
+    if (vetor[q3] > vetor[fim]) trocar(&vetor[q3], &vetor[fim]);
+    if (vetor[inicio] > vetor[q1]) trocar(&vetor[inicio], &vetor[q1]);
+
+    // Coloca a mediana aproximada na penúltima posição (antes de fim)
+    trocar(&vetor[meio], &vetor[fim - 1]);
+
+    return vetor[fim - 1]; // Retorna o valor do pivô
+}
+
+// Particionamento eficiente (Bentley-McIlroy) que lida bem com elementos duplicados
+int particiona(int* vetor, int inicio, int fim) {
+    int pivo = medianaDeCinco(vetor, inicio, fim);
+    int i = inicio;
+    int j = fim - 1;
+
+    while (1) {
+        // Avança até encontrar elemento >= pivô
+        while (vetor[++i] < pivo);
+        // Retrocede até encontrar elemento <= pivô
+        while (vetor[--j] > pivo);
+
+        // Se os ponteiros se cruzarem, encerra a partição
+        if (i >= j) break;
+
+        // Troca os elementos fora de lugar
+        trocar(&vetor[i], &vetor[j]);
+
+        // Lida com múltiplos elementos iguais ao pivô
+        if (vetor[i] == pivo) trocar(&vetor[i], &vetor[++inicio]);
+        if (vetor[j] == pivo) trocar(&vetor[j], &vetor[--fim]);
+    }
+
+    // Reposiciona os elementos iguais ao pivô
+    while (inicio > 0 && vetor[inicio - 1] == pivo) inicio--;
+    while (fim < (fim + inicio) / 2 && vetor[fim + 1] == pivo) fim++;
+
+    trocar(&vetor[i], &vetor[fim - 1]);
+
+    return i; // Retorna o índice final do pivô
+}
+
+// QuickSort iterativo com mediana de cinco, particionamento 3-vias e pilha manual
+void quickSort(int* vetor, int inicio, int fim) {
+    int* pilha = malloc(TAMANHO_PILHA * sizeof(int)); // Alocação segura
+    if (pilha == NULL) {
+        fprintf(stderr, "Erro ao alocar memória para a pilha.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    int topo = -1;
+
+    // Empilha os limites iniciais
+    pilha[++topo] = inicio;
+    pilha[++topo] = fim;
+
+    while (topo >= 0) {
+        fim = pilha[topo--];
+        inicio = pilha[topo--];
+
+        // Usa partições apenas se o subvetor for grande o suficiente
+        if (fim - inicio > 16) {
+            int p = particiona(vetor, inicio, fim);
+
+            // Estratégia: empilha primeiro o menor subvetor (melhora uso da pilha)
+            if (p - inicio > fim - p) {
+                pilha[++topo] = inicio;
+                pilha[++topo] = p - 1;
+
+                if (p + 1 < fim) {
+                    pilha[++topo] = p + 1;
+                    pilha[++topo] = fim;
+                }
+            } else {
+                if (p + 1 < fim) {
+                    pilha[++topo] = p + 1;
+                    pilha[++topo] = fim;
+                }
+
+                pilha[++topo] = inicio;
+                pilha[++topo] = p - 1;
             }
         }
     }
 
-// Insere o pivo na sua posição já ordenado;
-//
-    aux = vetor[inicio];
-    vetor[inicio] = vetor[pos];
-    vetor[pos] = aux;
-
-    return pos;
+    free(pilha); // Libera a memória da pilha
 }

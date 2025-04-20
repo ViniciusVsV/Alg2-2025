@@ -12,7 +12,10 @@ double insertionSort(int* vetor , int tam);
 void mergeSort(int*vetor , int inicio , int fim);
 void merge(int* vetor , int inicio , int meio , int fim);
 
+
+void trocar(int* a, int* b);
+int medianaDeCinco(int* vetor, int inicio, int fim);
 void quickSort(int* vetor , int inicio , int fim);
 int particiona(int* vetor , int inicio , int fim);
 
-#endif
+#endif  
