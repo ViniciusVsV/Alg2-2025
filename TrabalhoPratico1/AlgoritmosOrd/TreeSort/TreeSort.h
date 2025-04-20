@@ -8,8 +8,8 @@ arvore *criaArvore();
 
 no *criaNo(int valor);
 
-void inserirNo(arvore* arv, no* novo, long long* comparacoes, long long* trocas);
+void inserirNo(arvore* arv, no* novo);
 
-void travessiaMorris(arvore* arv, int* vetOrdenado, long long* comparacoes);
+void travessiaMorris(arvore *arv, int *vetOrdenado,long long* trocas, long long* comparacoes);
 void executarTreeSort(int* vetor, int tam, long long* comparacoes, long long* trocas);
 #endif

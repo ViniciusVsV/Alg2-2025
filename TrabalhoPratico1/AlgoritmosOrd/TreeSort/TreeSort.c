@@ -50,67 +50,92 @@ no* criaNo(int valor){
 
 // Insere um nó em uma árvore;
 //
-void inserirNo(arvore* arv, no* novo, long long* comparacoes, long long* trocas) {
-    if (!arv || !novo) return;
+void inserirNo(arvore* arv , no* novo){
+    if(!arv || !novo) return; // Previne erros na alocação de memória;
 
-    if (!arv->raiz) {
+// Caso seja o primeiro elemento da árvore;
+//
+    if(!arv->raiz){
         arv->raiz = novo;
         arv->qtd++;
-        (*trocas)++; // primeira inserção
         return;
     }
 
+// Percorrimento até encontrar a posição correta do elemento;
+//
     no* atual = arv->raiz;
     no* ant = NULL;
 
-    while (atual) {
+    while(atual){
         ant = atual;
 
-        (*comparacoes)++;
-        if (atual->valor > novo->valor)
+        if(atual->valor > novo->valor)
             atual = atual->esq;
         else
             atual = atual->dir;
     }
 
-    if (novo->valor < ant->valor)
+    if(novo->valor < ant->valor) {
         ant->esq = novo;
-    else
+    }
+    else {
         ant->dir = novo;
+    }
 
-    (*trocas)++; // inserção
     arv->qtd++;
 }
 
 // Percorrimento in-order utilizando a travessia de Morris, onde acontece a ordenação de fato;
 //
-void travessiaMorris(arvore* arv, int* vetOrdenado, long long* comparacoes) {
-    int i = 0;
-    no* atual = arv->raiz;
-    no* predecessor;
+void travessiaMorris(arvore *arv, int *vetOrdenado, long long* trocas, long long* comparacoes) {
+    *comparacoes = 0;
+    *trocas=0;
+   // Armazena cada passo na árvore
+    no *atual = arv->raiz; // Toda arvore será percorrida iniciando de sua raíz;
+    no *predecessor;
 
+    int i = 0; // Marca a posição atual do vetor;
+
+    // Percorre toda a lista
     while (atual) {
+// Caso o elemento seja o menor da sua sub-árvore;
+//
         if (!atual->esq) {
-            vetOrdenado[i++] = atual->valor;
-            atual = atual->dir;
-        } else {
+            vetOrdenado[i] = atual->valor; // Armazena o elemento atual no vetor ordenado;
+            i++;
+
+            atual = atual->dir; // Passa para o próximo;
+            (*comparacoes)++;
+            (*trocas)++;
+        }
+        else {
+// Busca o predecessor do nó atual;
+//
             predecessor = atual->esq;
             while (predecessor->dir && predecessor->dir != atual) {
                 predecessor = predecessor->dir;
-                (*comparacoes)++; // compara enquanto busca predecessor
+                (*comparacoes)++;
             }
 
+// Caso o predecessor não tenha ligação para o nó atual, essa ligação é criada temporariamente;
+//
             if (!predecessor->dir) {
                 predecessor->dir = atual;
                 atual = atual->esq;
-            } else {
-                predecessor->dir = NULL;
-                vetOrdenado[i++] = atual->valor;
-                atual = atual->dir;
+
+                (*comparacoes)++;
+            }
+            else {
+                predecessor->dir = NULL; // Remoção do link temporário;
+                vetOrdenado[i] = atual->valor; // Posiciona o elemento no vetor em sua posição correta;
+                i++;
+
+                atual = atual->dir; // Passa para o próximo;
+                (*comparacoes)++;
+                (*trocas)++;
             }
         }
     }
-
 }
 
 void executarTreeSort(int* vetor, int tam, long long* comparacoes, long long* trocas) {
@@ -118,7 +143,7 @@ void executarTreeSort(int* vetor, int tam, long long* comparacoes, long long* tr
 
     for (int i = 0; i < tam; i++) {
         no* n = criaNo(vetor[i]);
-        inserirNo(a, n, comparacoes, trocas);  // passa contadores
+        inserirNo(a, n);  // passa contadores
     }
 
     int* vetOrdenado = malloc(sizeof(int) * tam);
@@ -128,7 +153,7 @@ void executarTreeSort(int* vetor, int tam, long long* comparacoes, long long* tr
         return;
     }
 
-    travessiaMorris(a, vetOrdenado, comparacoes);  // só comparações aqui
+    travessiaMorris(a, vetOrdenado,trocas,comparacoes  );  // só comparações aqui
 
     for (int i = 0; i < tam; i++) {
         vetor[i] = vetOrdenado[i];
