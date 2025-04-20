@@ -131,14 +131,6 @@ void rodarBenchmarkAlgoritmo(int algoritmoIndice) {
         int tam = tamanhos[t];
         fprintf(arq, "%d", tam);
 
-        // Evita rodar algoritmos ineficientes para entradas muito grandes
-        if ((algoritmoIndice == 0 || algoritmoIndice == 1) && tam >= 10000) {
-            for (int i = 0; i < QTD_TIPOS_ORDENACAO; i++) {
-                fprintf(arq, ";N/A");
-            }
-            fprintf(arq, "\n");
-            continue;
-        }
 
         // Para cada tipo de ordenação
         for (int tipo = 0; tipo < QTD_TIPOS_ORDENACAO; tipo++) {
