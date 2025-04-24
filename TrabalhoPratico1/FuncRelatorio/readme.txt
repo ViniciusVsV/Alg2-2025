@@ -1,1 +1,0 @@
-Pasta alocada para a implementação das funções de geração de representações visuais dos resultados dos testes (gráfico, etc...)
