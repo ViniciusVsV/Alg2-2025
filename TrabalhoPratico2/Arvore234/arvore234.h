@@ -41,7 +41,7 @@ no234* divideNo(arvore234* arv, no234* pai, no234* noCheio, int chave);
 /// @brief Obtém a raiz de uma dada árvore 2-3-4
 /// @param arv Árvore em questão
 /// @return Nó raiz da árvore
-no234* obtemRaiz(arvore234* arv);
+no234* obtemRaiz234(arvore234* arv);
 
 /// @brief Obtém a quantidade de splits realizado em uma árvore 2-3-4
 /// @param arv Árvore em questão
@@ -51,16 +51,16 @@ int obtemQtdSplit(arvore234* arv);
 /// @brief Obtém a altura de uma dada árvore 2-3-4
 /// @param arv Árvore em questão
 /// @return Altura da árvore
-int obtemAltura(arvore234* arv);
+int obtemAltura234(arvore234* arv);
 
 /// @brief Imprime os elementos de uma árvore 2-3-4
 /// @param arv Árvore em questão
-void imprimeArvore(arvore234 *arv);
+void imprimeArvore234(arvore234 *arv);
 
 /// @brief Imprime as chaves de um nó de uma árvore 2-3-4
 /// @param no Nó em questão
-/// @param prefix 
+/// @param prefixo 
 /// @param is_last 
-void imprimeNo(no234* no, const char *prefix, int is_last);
+void imprimeNo234(no234* no, const char *prefix, int is_last);
 
 #endif

@@ -211,17 +211,17 @@ void insereChaveNoInterno(no234* noAlvo, int chave, no234* filhoEsquerdo, no234*
 }
 
 ////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
-no234* obtemRaiz(arvore234* arv){
+no234* obtemRaiz234(arvore234* arv){
     return arv->raiz;
 }
 int obtemQtdSplit(arvore234* arv){
     return arv->qtdSplit;
 }
-int obtemAltura(arvore234* arv){
+int obtemAltura234(arvore234* arv){
     return arv->altura;
 }
 
-void imprimeArvore(arvore234 *arv){
+void imprimeArvore234(arvore234 *arv){
     no234* raiz = arv->raiz;
 
     if(raiz == NULL){
@@ -240,11 +240,11 @@ void imprimeArvore(arvore234 *arv){
 
     if(!raiz->folha){
         for(int i = 0; i <= raiz->qtdChaves; i++) 
-            imprimeNo(raiz->filhos[i], "", i == raiz->qtdChaves);
+            imprimeNo234(raiz->filhos[i], "", i == raiz->qtdChaves);
     }
 }
 
-void imprimeNo(no234* no, const char *prefixo, int is_last){
+void imprimeNo234(no234* no, const char *prefixo, int is_last){
     if(no == NULL) 
         return;
 
@@ -268,6 +268,6 @@ void imprimeNo(no234* no, const char *prefixo, int is_last){
             snprintf(novoPrefixo, sizeof(novoPrefixo), "%s│   ", prefixo);
 
         for(int i = 0; i <= no->qtdChaves; i++) 
-            imprimeNo(no->filhos[i], novoPrefixo, i == no->qtdChaves);
+            imprimeNo234(no->filhos[i], novoPrefixo, i == no->qtdChaves);
     }
 }
