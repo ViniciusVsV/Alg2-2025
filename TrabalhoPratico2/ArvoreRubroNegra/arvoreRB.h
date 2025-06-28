@@ -1,6 +1,8 @@
 #ifndef ARVORERB
 #define ARVORERB
 
+#include "../Arvore234/arvore234.h"
+
 typedef struct  arvoreRB arvoreRB;
 typedef struct noRB noRB;
 
@@ -8,7 +10,7 @@ typedef struct noRB noRB;
 arvoreRB* alocaArvoreRB();
 
 //Função que aloca um novo nó
-noRB* alocaNoRB(int chave);
+noRB* alocaNoRB(int chave, char cor);
 
 //Função iterativa que insere um novo nó na árvore e chama a função que ajusta o balanceamento
 void insereNoRB(arvoreRB* arv, noRB* novoNo);
@@ -17,6 +19,8 @@ void insereNoRB(arvoreRB* arv, noRB* novoNo);
 //retorna 1 se o nó foi removido
 //retorna 0 se o elemento não foi encontrado na árvore
 int removeNoRB(arvoreRB* arv, int valor);
+
+noRB* converte234(no234* raiz234);
 
 //Função que corrige o balanceamento após a inserção
 void balanceamentoInsercao(arvoreRB* arv, noRB* novoNo);
@@ -29,6 +33,8 @@ void rotacaoDireita(noRB* noDesbalanceado);
 
 //Rotação à esquerda
 void rotacaoEsquerda(noRB* noDesbalanceado);
+
+void setRaiz(arvoreRB* arv, noRB* noRaiz);
 
 //Função que retorna a raiz da árvore
 noRB* retornaRaizRB(arvoreRB* arv);

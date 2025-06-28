@@ -19,20 +19,18 @@ struct noRB{
 arvoreRB* alocaArvoreRB(){
     arvoreRB* novaArvore = (arvoreRB*) malloc(sizeof(arvoreRB));
 
-    noRB* sentinela = alocaNoRB(-100000);
-
-    sentinela->cor = 'P';
+    noRB* sentinela = alocaNoRB(-100000, 'P');
 
     novaArvore->sentinela = sentinela;
 
     return novaArvore;
 }
 
-noRB* alocaNoRB(int chave){
+noRB* alocaNoRB(int chave, char cor){
     noRB* novoNo = (noRB*) malloc(sizeof(noRB));
 
     novoNo->chave = chave;
-    novoNo->cor = 'V';
+    novoNo->cor = cor;
 
     novoNo->esq = NULL;
     novoNo->dir = NULL;
@@ -145,6 +143,52 @@ int removeNoRB(arvoreRB* arv, int valor){
     free(aux);
 
     return 1;
+}
+
+noRB* converte234(no234* raiz234){
+    noRB* raizRB = NULL;
+
+    if(!raiz234)
+        return NULL;
+
+    int qtdChaves = obtemQtdChaves(raiz234);
+    int* chaves = obtemChaves(raiz234);
+    no234** filhos = obtemFilhos(raiz234);
+
+    //Nó 2 -> um nó preto
+    if (qtdChaves == 1){
+        raizRB = alocaNoRB(chaves[0], 'P');
+        raizRB->esq = converte234(filhos[0]);
+        raizRB->dir = converte234(filhos[1]);
+    }
+
+    //Nó 3 -> um nó preto com filho vermelho à direita
+    else if (qtdChaves == 2){
+        raizRB = alocaNoRB(chaves[0], 'P');
+        noRB* vermelho = alocaNoRB(chaves[1], 'V');
+        raizRB->dir = vermelho;
+
+        raizRB->esq = converte234(filhos[0]);
+        vermelho->esq = converte234(filhos[1]);
+        vermelho->dir = converte234(filhos[2]);
+    }
+
+    //Nó 4 -> um nó preto com dois filhos vermelhos
+    else if (qtdChaves == 3){
+        raizRB = alocaNoRB(chaves[1], 'P');
+        noRB* vermelhoEsq = alocaNoRB(chaves[0], 'V');
+        noRB* vermelhoDir = alocaNoRB(chaves[2], 'V');
+
+        raizRB->esq = vermelhoEsq;
+        raizRB->dir = vermelhoDir;
+
+        vermelhoEsq->esq = converte234(filhos[0]);
+        vermelhoEsq->dir = converte234(filhos[1]);
+        vermelhoDir->esq = converte234(filhos[2]);
+        vermelhoDir->dir = converte234(filhos[3]);
+    }
+
+    return raizRB;
 }
 
 ///////////////////////////////////Métodos de Balanceamento da Árvore/////////////////////////////////////
@@ -331,6 +375,10 @@ void rotacaoDireita(noRB* noDesbalanceado){
 }
 
 ////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
+void setRaiz(arvoreRB* arv, noRB* noRaiz){
+    arv->sentinela->dir = noRaiz;
+}
+
 noRB* retornaRaizRB(arvoreRB* arv){
     return arv->sentinela->dir;
 }

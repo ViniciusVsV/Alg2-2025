@@ -53,6 +53,21 @@ int obtemQtdSplit(arvore234* arv);
 /// @return Altura da árvore
 int obtemAltura234(arvore234* arv);
 
+/// @brief Obtém o vetor de chaves de um nó 2-3-4
+/// @param no Nó em questão
+/// @return Vetor de inteiros com as chaves do nó
+int* obtemChaves(no234* no);
+
+/// @brief Obtém o vetor de ponteiros para os filhos de um nó 2-3-4
+/// @param no Nó em questão
+/// @return Vetor de ponteiros com os filhos do nó
+no234** obtemFilhos(no234* no);
+
+/// @brief Obtém a quantidade de chaves de um nó 2-3-4
+/// @param no Nó em questão
+/// @return Quantidade de chaves do nó
+int obtemQtdChaves(no234* no);
+
 /// @brief Imprime os elementos de uma árvore 2-3-4
 /// @param arv Árvore em questão
 void imprimeArvore234(arvore234 *arv);

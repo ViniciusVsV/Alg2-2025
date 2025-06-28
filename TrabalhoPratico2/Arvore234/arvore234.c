@@ -220,6 +220,15 @@ int obtemQtdSplit(arvore234* arv){
 int obtemAltura234(arvore234* arv){
     return arv->altura;
 }
+int* obtemChaves(no234* no){
+    return no->chaves;
+}
+no234** obtemFilhos(no234* no){
+    return no->filhos;
+}
+int obtemQtdChaves(no234* no){
+    return no->qtdChaves;
+}
 
 void imprimeArvore234(arvore234 *arv){
     no234* raiz = arv->raiz;
