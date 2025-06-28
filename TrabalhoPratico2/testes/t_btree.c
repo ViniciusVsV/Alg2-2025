@@ -1,4 +1,4 @@
-#include "btree.h"
+#include "btree_padrao.h" // Se quiser testar o preemptivo, substitua por "btree_preemptivo.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -13,7 +13,7 @@ int main() {
         return 1;
     }
 
-    for(int i = 2; i <= 2; i++) {
+    for(int i = 2; i <= 5; i++) {
         char filename[40];
         sprintf(filename, "numeros/numeros_10e%d.txt", i);
         FILE *fp = fopen(filename, "r");
@@ -44,7 +44,6 @@ int main() {
         printf("Altura da árvore: %d\n", calcularAlturaBtree(arvore));
         printf("Quantidade de nós: %d\n\n", contarNosBtree(arvore));
 
-        // Remoção
 
         for(int j = 0; j < 4; j++) {
             sprintf(filename, "numeros/numeros_10e%d_%d.txt", i, percents[j]);
@@ -64,6 +63,8 @@ int main() {
             }
 
             fclose(fp);
+
+            imprimeBtree(arvore);
 
             printf("Após remoção de %d%%:\n", percents[j]);
             printf("Quantidade de rotações: %d\n", obterQntRotacoes(arvore));

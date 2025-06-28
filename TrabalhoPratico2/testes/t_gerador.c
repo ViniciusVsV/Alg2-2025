@@ -1,3 +1,9 @@
+// Este código C gera arquivos contendo números ordenados aleatoriamente, 
+// com tamanhos variados, e cria arquivos adicionais contendo porcentagens específicas desses números.
+//
+// Esses números são utilizados para testar a inserção e remoção em uma árvore B,
+// permitindo avaliar o desempenho do algoritmo de árvore B em diferentes cenários de carga.
+//
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
