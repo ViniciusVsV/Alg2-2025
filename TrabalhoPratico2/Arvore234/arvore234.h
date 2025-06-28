@@ -2,27 +2,65 @@
 #define ARVORE234
 
 typedef struct arvore234 arvore234;
-typedef struct no no;
+typedef struct no234 no234;
 
-//Aloca uma nova árvore 2-3-4 de ordem 4
+/// @brief Aloca um novo objeto do tipo arvore234
+/// @return Nova árvore criada
 arvore234* alocaArvore234();
 
-//Aloca um novo nó da árvore 2-3-4
-no* alocaNo(int folha);
+/// @brief Aloca um novo objeto do tipo no234
+/// @param folha Booleana que dita se o nó criado é folha ou não
+/// @return Novo nó criado
+no234* alocaNo234(int folha);
 
-//Insere um novo elemento na árvore 2-3-4
+/// @brief Insere um novo elemento em uma árvore 2-3-4
+/// @param arv Árvore na qual o elemento será inserido
+/// @param chave Elemento a ser inserido na árvore
 void insereChaveArvore(arvore234* arv, int chave);
 
-//Insere uma chave em um nó folha da árvore
-void insereChaveNoFolha(no* noAlvo, int chave);
+/// @brief Insere um elemento em um nó folha específico de uma árvore 2-3-4
+/// @param noAlvo Nó folha no qual o elemento será inserido
+/// @param chave Elemento a ser inserido no nó folha
+void insereChaveNoFolha(no234* noAlvo, int chave);
 
-//Insere uma chave em um nó interno da árvore
-void insereChaveNoInterno(no* noAlvo, int chave, no* filhoEsquerdo, no* filhoDireito);
+/// @brief Insere um elemento em um nó interno específico de uma árvore 2-3-4
+/// @param noAlvo Nó interno no qual o elemento será inserido
+/// @param chave Elemento a ser inserido no nó folha
+/// @param filhoEsquerdo Filho esquerdo do novo elemento nó a ser inserido
+/// @param filhoDireito Filho direito do novo elemento a ser inserido
+void insereChaveNoInterno(no234* noAlvo, int chave, no234* filhoEsquerdo, no234* filhoDireito);
 
-//Divide um nó cheio
-void divideNo(arvore234* arv, no* pai, no* noCheio);
+/// @brief Divide um nó cheio em dois para inserção de um novo elemento
+/// @param arv Árvore na qual a operação é realizada
+/// @param pai Pai do nó a ser dividido
+/// @param noCheio Nó cheio que deverá ser dividido
+/// @param chave Valor do elemento a ser inserido no nó cheio
+/// @return Nó correto para inserção do elemento após a divisão
+no234* divideNo(arvore234* arv, no234* pai, no234* noCheio, int chave);
 
-//Percorre a árvore em ordem
-void percorreArvore(no* no);
+/// @brief Obtém a raiz de uma dada árvore 2-3-4
+/// @param arv Árvore em questão
+/// @return Nó raiz da árvore
+no234* obtemRaiz(arvore234* arv);
+
+/// @brief Obtém a quantidade de splits realizado em uma árvore 2-3-4
+/// @param arv Árvore em questão
+/// @return Quantidade de divisões feitas
+int obtemQtdSplit(arvore234* arv);
+
+/// @brief Obtém a altura de uma dada árvore 2-3-4
+/// @param arv Árvore em questão
+/// @return Altura da árvore
+int obtemAltura(arvore234* arv);
+
+/// @brief Imprime os elementos de uma árvore 2-3-4
+/// @param arv Árvore em questão
+void imprimeArvore(arvore234 *arv);
+
+/// @brief Imprime as chaves de um nó de uma árvore 2-3-4
+/// @param no Nó em questão
+/// @param prefix 
+/// @param is_last 
+void imprimeNo(no234* no, const char *prefix, int is_last);
 
 #endif

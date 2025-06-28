@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/////////////////////////////////Declaração de Variáveis Globais e Structs////////////////////////////////
 int maximoChaves = 3;
 int minimioChaves = 1;
 int maximoFilhos = 4;
@@ -10,27 +11,29 @@ int minimioFilhos = 2;
 
 struct arvore234
 {
-    no* raiz;
+    no234* raiz;
     
     int qtdSplit;
     int altura;
 };
 
-struct no
+struct no234
 {
     int* chaves;
-    no** filhos;
+    no234** filhos;
+    no234* pai;
     
     int folha;
     int qtdChaves;
 };
 
+//////////////////////////////////Métodos de Alocação da Árvore e dos Nós/////////////////////////////////
 arvore234* alocaArvore234(){
     arvore234* novaArvore = (arvore234*) malloc(sizeof(arvore234));
     if(!novaArvore)
         return NULL;
 
-    no* raiz = alocaNo(1);
+    no234* raiz = alocaNo234(1);
     if(!raiz){
         free(novaArvore);
 
@@ -45,14 +48,14 @@ arvore234* alocaArvore234(){
     return novaArvore;
 }
 
-no* alocaNo(int folha){
-    no* novoNo = (no*) malloc(sizeof(no));
+no234* alocaNo234(int folha){
+    no234* novoNo = (no234*) malloc(sizeof(no234));
     if(!novoNo)
         return NULL;
 
     novoNo->chaves = (int*) malloc(maximoChaves * sizeof(int));
-    novoNo->filhos = (no**) malloc(maximoFilhos * sizeof(no*));
-
+    novoNo->filhos = (no234**) malloc(maximoFilhos * sizeof(no234*));
+    novoNo->pai = NULL;
     
     if(!novoNo->chaves || !novoNo->filhos){
         free(novoNo->chaves);
@@ -74,16 +77,9 @@ no* alocaNo(int folha){
     return novoNo;
 }
 
+////////////////////////////////Métodos de Inserção de Elementos na Árvore////////////////////////////////
 void insereChaveArvore(arvore234* arv, int chave){
-    //Se a raiz estiver cheia, fazer a divisão dela
-    if(arv->raiz->qtdChaves == maximoChaves){
-        divideNo(arv, NULL, arv->raiz);
-
-        arv->altura++;
-    }
- 
-    no* aux = arv->raiz;
-    no* auxPai = NULL;
+    no234* aux = arv->raiz;
     int index;
 
     //Percorrer a árvore até achar um nó folha
@@ -98,36 +94,43 @@ void insereChaveArvore(arvore234* arv, int chave){
             }
         }
 
-        //Fazer a divisão preventiva no filho se estiver cheio
-        if(aux->filhos[index]->qtdChaves == maximoChaves) {
-            divideNo(arv, aux, aux->filhos[index]);
-
-            if(chave > aux->chaves[index])
-                index++;
-        }
-
         //Descer ao filho
-        auxPai = aux;
         aux = aux->filhos[index];
     }
 
-    insereChaveNoFolha(aux, chave);
+    //Encontrado o nó folha, verificar se está cheio
+    //Se está cheio, realizar a divisão e então inserir
+    if(aux->qtdChaves == maximoChaves){
+        aux = divideNo(arv, aux->pai, aux, chave);
+
+        insereChaveNoFolha(aux, chave);
+    }
+
+    //Se não está cheio, apenas inserir
+    else{
+        insereChaveNoFolha(aux, chave);
+    }
 }
 
-void divideNo(arvore234* arv, no* pai, no* noCheio){
+no234* divideNo(arvore234* arv, no234* pai, no234* noCheio, int chave){
     arv->qtdSplit++;
 
     //Se o pai for nulo, criar um novo nó para ele (pai da raiz atual)
     if(!pai){
-        pai = alocaNo(0); //Não é folha 
+        pai = alocaNo234(0); //Não é folha 
         arv->raiz = pai;   //Atualiza a raiz
+
+        noCheio->pai = pai; //No cheio aponto para o novo pai
+
+        arv->altura++;
     }
 
     int meio = maximoChaves / 2;
     int intermediario = noCheio->chaves[meio];
 
     //Criar novo nó com os valores maiores que o intermediário
-    no* noMaior = alocaNo(noCheio->folha); //O status de folha é igual ao do irmão
+    no234* noMaior = alocaNo234(noCheio->folha); //O status de folha é igual ao do irmão
+    noMaior->pai = pai; //No maior aponta para o pai novo ou já existente
 
     //Transferir os valores de noCheio maiores que o valor intermediário para noMaior
     int j = 0;
@@ -146,17 +149,29 @@ void divideNo(arvore234* arv, no* pai, no* noCheio){
             noCheio->filhos[i] = NULL;
         }
     }
+    
+    //Se o pai estiver cheio, chamar recursão
+    if(pai->qtdChaves == maximoChaves){
+        pai = divideNo(arv, pai->pai, pai, chave);
 
-    //Inserir o valor intermediário do noCheio no nó pai e atualizar os ponteiros da esquerda e direita para os filhos
+        //Atualizar os ponteiros apra o pai dos nós cheio e maior
+        noCheio->pai = pai;
+        noMaior->pai = pai;
+    }
+
+    //Inserir o valor intermediário do noCheio no nó pai e atualizar os ponteiros
     insereChaveNoInterno(pai, intermediario, noCheio, noMaior);
 
     noCheio->chaves[meio] = -1;
     noCheio->qtdChaves--;
+
+    if(chave < intermediario)
+        return noCheio;
+    else
+        return noMaior;
 }
 
-void insereChaveNoFolha(no* noAlvo, int chave){
-    printf("Inserindo elemento...\n");
-
+void insereChaveNoFolha(no234* noAlvo, int chave){
     int i = noAlvo->qtdChaves - 1;
  
     //Encontrar a posição correta do vetor de chaves para inserção do novo elemento no nó
@@ -173,7 +188,7 @@ void insereChaveNoFolha(no* noAlvo, int chave){
     noAlvo->qtdChaves++;
 }
 
-void insereChaveNoInterno(no* noAlvo, int chave, no* filhoEsquerdo, no* filhoDireito){
+void insereChaveNoInterno(no234* noAlvo, int chave, no234* filhoEsquerdo, no234* filhoDireito){
     int i = noAlvo->qtdChaves - 1;
  
     //Encontrar a posição correta do vetor de chaves para inserção do novo elemento no nó
@@ -195,54 +210,64 @@ void insereChaveNoInterno(no* noAlvo, int chave, no* filhoEsquerdo, no* filhoDir
     noAlvo->qtdChaves++;
 }
 
-void percorreArvore(no* no){
-    int i;
+////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
+no234* obtemRaiz(arvore234* arv){
+    return arv->raiz;
+}
+int obtemQtdSplit(arvore234* arv){
+    return arv->qtdSplit;
+}
+int obtemAltura(arvore234* arv){
+    return arv->altura;
+}
 
-    if(no){
-        for(i = 0; i < no->qtdChaves; i++){
-            percorreArvore(no->filhos[i]);
-        
-            printf("%d\t", no->chaves[i]);
-        }
+void imprimeArvore(arvore234 *arv){
+    no234* raiz = arv->raiz;
 
-        percorreArvore(no->filhos[i]);
+    if(raiz == NULL){
+        printf("A árvore está vazia.\n");
+        return;
+    }
+
+    printf("[");
+    for(int i = 0; i < raiz->qtdChaves; i++){
+        printf("%d", raiz->chaves[i]);
+
+        if(i < raiz->qtdChaves - 1) 
+            printf(", ");
+    }
+    printf("]\n");
+
+    if(!raiz->folha){
+        for(int i = 0; i <= raiz->qtdChaves; i++) 
+            imprimeNo(raiz->filhos[i], "", i == raiz->qtdChaves);
     }
 }
 
-int main(){
-    arvore234* arv = alocaArvore234();
+void imprimeNo(no234* no, const char *prefixo, int is_last){
+    if(no == NULL) 
+        return;
 
-    insereChaveArvore(arv, 1);
-    insereChaveArvore(arv, 2);
-    insereChaveArvore(arv, 3);
-    insereChaveArvore(arv, 4);
-    insereChaveArvore(arv, 5);
-    insereChaveArvore(arv, 6);
-    insereChaveArvore(arv, 7);
-    insereChaveArvore(arv, 8);
-    insereChaveArvore(arv, 9);
-    insereChaveArvore(arv, 10);
-    insereChaveArvore(arv, 11);
-    insereChaveArvore(arv, 12);
-    insereChaveArvore(arv, 13);
-    insereChaveArvore(arv, 14);
-    insereChaveArvore(arv, 15);
-    insereChaveArvore(arv, 16);
-    insereChaveArvore(arv, 17);
-    insereChaveArvore(arv, 18);
-    insereChaveArvore(arv, 19);
-    insereChaveArvore(arv, 20);
+    printf("%s", prefixo);
+    printf(is_last ? "└── " : "├── ");
+    
+    printf("[");
+    for(int i = 0; i < no->qtdChaves; i++){
+        printf("%d", no->chaves[i]);
 
-    for (int i = 0; i <= arv->raiz->qtdChaves; i++) {
-        for (int j = 0; j < arv->raiz->filhos[i]->qtdChaves; j++) {
-            printf("%d\t", arv->raiz->filhos[i]->chaves[j]);
-        }
-        printf("\n");
+        if(i < no->qtdChaves - 1)
+            printf(", ");
     }
+    printf("]\n");
 
-    printf("\nPercorrendo a árvore toda:\n");
-    percorreArvore(arv->raiz);
+    if(!no->folha){
+        char novoPrefixo[1024];
+        if(is_last)
+            snprintf(novoPrefixo, sizeof(novoPrefixo), "%s    ", prefixo);
+        else
+            snprintf(novoPrefixo, sizeof(novoPrefixo), "%s│   ", prefixo);
 
-    printf("\nAltura da árvore: %d\n", arv->altura);
-    printf("Quantidade de splits: %d\n", arv->qtdSplit);
+        for(int i = 0; i <= no->qtdChaves; i++) 
+            imprimeNo(no->filhos[i], novoPrefixo, i == no->qtdChaves);
+    }
 }
