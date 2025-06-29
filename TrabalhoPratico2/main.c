@@ -10,14 +10,13 @@ int main(){
 
     int converteu = 0;
     int acao, chave;
-    char nomeArquivo[30];
+    char nomeArquivo[50];
 
     printf("Digite o nome do arquivo: ");
     scanf("%s", &nomeArquivo);
 
-    FILE* arquivo = fopen(nomeArquivo, "r");
-    if(!arquivo){
-        printf("Arquivo não encontrado\n");
+    if(!preencheArvore(arv234, nomeArquivo)){
+        printf("Erro na leitura do arquivo\n");
         return 0;
     }
     
@@ -56,7 +55,7 @@ int main(){
 
             case 4:
                 printf("Convertendo em uma árvore rubro-negra...\n");
-                setRaiz(arvRB, converte234(obtemRaiz234(arv234)));
+                setRaiz(arvRB, converte234(obtemRaiz234(arv234), NULL));
                 converteu = 1;
                 printf("Conversão concluida!\n");
                 break;

@@ -83,6 +83,18 @@ no234* alocaNo234(int folha){
 
 ////////////////////////////////Métodos de Inserção de Elementos na Árvore////////////////////////////////
 
+int preencheArvore(arvore234* arv, char* nomeArquivo){
+    FILE* arquivo = fopen(nomeArquivo, "r");
+    if(!arquivo)
+        return 0;
+
+    int chave;
+    while(fscanf(arquivo, "%d\n", &chave) == 1)
+        insereChaveArvore(arv, chave);
+
+    return 1;
+}
+
 void insereChaveArvore(arvore234* arv, int chave){
     no234* aux = arv->raiz;
     int index;

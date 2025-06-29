@@ -38,8 +38,9 @@ int removeNoRB(arvoreRB* arv, int valor);
 
 /// @brief Converte uma árvore RB em uma árvore 2-3-4;
 /// @param raiz234 Ponteiro para raiz da árvore 234;
+/// @param pai Pai dos nós RB criados
 /// @return Ponteiro para raiz da árvore RB;
-noRB* converte234(no234* raiz234);
+noRB* converte234(no234* raiz234, noRB* pai);
 
 ///////////////////////////////////Métodos de Balanceamento da Árvore/////////////////////////////////////
 

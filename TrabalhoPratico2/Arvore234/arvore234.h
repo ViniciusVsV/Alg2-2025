@@ -18,6 +18,8 @@ no234* alocaNo234(int folha);
 
 ////////////////////////////////Métodos de Inserção de Elementos na Árvore////////////////////////////////
 
+int preencheArvore(arvore234* arv, char* nomeArquivo);
+
 /// @brief Insere um novo elemento em uma árvore 2-3-4
 /// @param arv Árvore na qual o elemento será inserido
 /// @param chave Elemento a ser inserido na árvore
