@@ -25,17 +25,19 @@ int preencheArvore(arvore234* arv, char* nomeArquivo);
 /// @param chave Elemento a ser inserido na árvore
 void insereChaveArvore(arvore234* arv, int chave);
 
+void insereChaveArvoreAux(arvore234* arv, no234* noAtual, int chave);
+
 /// @brief Insere um elemento em um nó folha específico de uma árvore 2-3-4
 /// @param noAlvo Nó folha no qual o elemento será inserido
 /// @param chave Elemento a ser inserido no nó folha
-void insereChaveNoFolha(no234* noAlvo, int chave);
+void insereChaveNo(no234* no, int chave);
 
 /// @brief Insere um elemento em um nó interno específico de uma árvore 2-3-4
 /// @param noAlvo Nó interno no qual o elemento será inserido
 /// @param chave Elemento a ser inserido no nó folha
 /// @param filhoEsquerdo Filho esquerdo do novo elemento nó a ser inserido
 /// @param filhoDireito Filho direito do novo elemento a ser inserido
-void insereChaveNoInterno(no234* noAlvo, int chave, no234* filhoEsquerdo, no234* filhoDireito);
+void reparaInsercao(arvore234* arv, no234* noAtual);
 
 /// @brief Divide um nó cheio em dois para inserção de um novo elemento
 /// @param arv Árvore na qual a operação é realizada
@@ -43,7 +45,7 @@ void insereChaveNoInterno(no234* noAlvo, int chave, no234* filhoEsquerdo, no234*
 /// @param noCheio Nó cheio que deverá ser dividido
 /// @param chave Valor do elemento a ser inserido no nó cheio
 /// @return Nó correto para inserção do elemento após a divisão
-no234* divideNo(arvore234* arv, no234* pai, no234* noCheio, int chave);
+no234* divideNo(arvore234* arv, no234* noCheio, no234* pai, int indicePai);
 
 ////////////////////////////////Métodos de Remoção de Elementos na Árvore/////////////////////////////////
 void removeChaveArvore(arvore234 *arv, int chave);
@@ -61,6 +63,10 @@ no234* emprestaDireita(arvore234* arv, no234* pai, int index);
 no234* juntaNos(arvore234* arv, no234* pai, int index);
 
 ////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
+
+no234* encontraPai(no234* raiz, no234* filho);
+
+int calculaAltura234(arvore234* arv);
 
 /// @brief Obtém a raiz de uma dada árvore 2-3-4
 /// @param arv Árvore em questão
@@ -81,11 +87,6 @@ int obtemQtdMerge(arvore234* arv);
 /// @param arv Árvore em questão
 /// @return Quantidade de rotações feitas
 int obtemQtdRotacoes(arvore234* arv);
-
-/// @brief Obtém a altura de uma dada árvore 2-3-4
-/// @param arv Árvore em questão
-/// @return Altura da árvore
-int obtemAltura234(arvore234* arv);
 
 /// @brief Obtém o vetor de chaves de um nó 2-3-4
 /// @param no Nó em questão

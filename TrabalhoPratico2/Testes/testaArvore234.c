@@ -1,4 +1,4 @@
-#include "Arvore234/arvore234.h"
+#include "../Arvore234/arvore234.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +16,7 @@ int main() {
 
     for(int i = 2; i <= 5; i++) {
         char filename[40];
-        sprintf(filename, "Testes/Teste10e%d.txt", i);
+        sprintf(filename, "Testes/Numeros/Numeros_10e%d.txt", i);
         FILE *fp = fopen(filename, "r");
 
         if (!fp) {
@@ -43,7 +43,7 @@ int main() {
         printf("Altura da árvore: %d\n", calculaAltura234(arvore));
 
         for(int j = 0; j < 4; j++) {
-            sprintf(filename, "Testes/Teste10e%d_%d.txt", i, percents[j]);
+            sprintf(filename, "Testes/Numeros/Numeros_10e%d_%d.txt", i, percents[j]);
             fp = fopen(filename, "r");
 
             if (!fp) {

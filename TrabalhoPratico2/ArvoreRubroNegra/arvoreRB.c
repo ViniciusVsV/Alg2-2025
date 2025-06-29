@@ -6,16 +6,16 @@
 /////////////////////////////////Declaração de Variáveis Globais e Structs////////////////////////////////
 
 struct arvoreRB{
-    noRB *sentinela;
+    noRB* sentinela;
 };
 
 struct noRB{
     int chave;
     char cor;
 
-    noRB *esq;
-    noRB *dir;
-    noRB *pai;
+    noRB* esq;
+    noRB* dir;
+    noRB* pai;
 };
 
 //////////////////////////////////Métodos de Alocação da Árvore e dos Nós/////////////////////////////////
@@ -108,7 +108,6 @@ int removeNoRB(arvoreRB* arv, int valor){
         while(predecessor->dir)
             predecessor = predecessor->dir;
 
-
         aux->chave = predecessor->chave; //Transferência de dados ao predecessor;
 
         // Atualização dos ponteiros;
@@ -118,7 +117,6 @@ int removeNoRB(arvoreRB* arv, int valor){
             predecessor->pai->dir = predecessor->esq;
 
         if(predecessor->esq) predecessor->esq->pai = predecessor->pai;
-        
 
         if(predecessor->cor == 'P')
             balanceamentoRemocao(arv, predecessor->esq, predecessor->pai);

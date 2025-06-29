@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <direct.h> // Para mkdir no Windows
+#include <direct.h>
 #include <time.h>
 
 int arr[100000];
@@ -15,9 +15,9 @@ int percents[] = {10, 20, 35, 50};
 
 int main() {
     // Criação da pasta (sem permissão extra)
-    if (_mkdir("Testes") != 0) {
+    if (_mkdir("Testes/Numeros") != 0) {
         // Ignora erro se já existe
-        printf("Diretório 'Testes' já existe ou não pôde ser criado.\n");
+        printf("Diretório 'Numeros' já existe ou não pôde ser criado.\n");
     }
 
     srand((unsigned)time(NULL));
@@ -33,7 +33,7 @@ int main() {
         printf("Gerando arquivo Teste10e%d.txt com %d elementos...\n", i, tamanho);
 
         char filename[40];
-        sprintf(filename, "Testes/Teste10e%d.txt", i);
+        sprintf(filename, "Testes/Numeros/Numeros_10e%d.txt", i);
         fp = fopen(filename, "w");
         if (fp == NULL) {
             perror("Erro ao abrir o arquivo principal");
@@ -68,7 +68,7 @@ int main() {
         for (int p = 0; p < 4; p++) {
             int num_elements = (int)(tamanho * (percents[p] - last_percent) / 100.0);
             char filename_percent[50];
-            sprintf(filename_percent, "Testes/Teste10e%d_%d.txt", i, percents[p]);
+            sprintf(filename_percent, "Testes/Numeros/Numeros_10e%d_%d.txt", i, percents[p]);
 
             fp = fopen(filename_percent, "w");
             if (fp == NULL) {

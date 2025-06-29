@@ -6,7 +6,16 @@
 
 int main(){
     arvore234* arv234 = alocaArvore234();
+    if(!arv234){
+        printf("Erro ao alocar a árvore 2-3-4\n");
+        return 0;
+    }
+
     arvoreRB* arvRB = alocaArvoreRB();
+    if(!arvRB){
+        printf("Erro ao alocar a árvore rubro-negra\n");
+        return 0;
+    }
 
     int converteu = 0;
     int acao, chave;
@@ -94,7 +103,11 @@ int main(){
             case 2:
                 printf("Digite a chave a ser removida: ");
                 scanf("%d", &chave);
-                removeNoRB(arvRB, chave);
+                int aux = removeNoRB(arvRB, chave);
+                if(aux)
+                    printf("Elemento removido com sucesso\n");
+                else
+                    printf("Elemento não encontrado\n");
                 break;
 
             case 3:
