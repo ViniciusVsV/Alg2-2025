@@ -5,21 +5,25 @@
 
 /////////////////////////////////Declaração de Variáveis Globais e Structs////////////////////////////////
 struct arvoreRB{
-    noRB* sentinela;
+    noRB *sentinela;
 };
 
 struct noRB{
     int chave;
     char cor;
 
-    noRB *esq, *dir, *pai;
+    noRB *esq;
+    noRB *dir;
+    noRB *pai;
 };
 
 //////////////////////////////////Métodos de Alocação da Árvore e dos Nós/////////////////////////////////
 arvoreRB* alocaArvoreRB(){
     arvoreRB* novaArvore = (arvoreRB*) malloc(sizeof(arvoreRB));
+    if(!novaArvore) return NULL;
 
     noRB* sentinela = alocaNoRB(-100000, 'P');
+    if(!sentinela) return NULL;
 
     novaArvore->sentinela = sentinela;
 
@@ -28,6 +32,7 @@ arvoreRB* alocaArvoreRB(){
 
 noRB* alocaNoRB(int chave, char cor){
     noRB* novoNo = (noRB*) malloc(sizeof(noRB));
+    if(!novoNo) return NULL;
 
     novoNo->chave = chave;
     novoNo->cor = cor;
@@ -41,10 +46,12 @@ noRB* alocaNoRB(int chave, char cor){
 
 //////////////////////////Métodos de Inserção e Remoção de Elementos na Árvore////////////////////////////
 void insereNoRB(arvoreRB* arv, noRB* novoNo){
+    // Variáveis que percorrerão a árvore;
     noRB* aux = arv->sentinela->dir;
     noRB* auxPai = arv->sentinela;
 
-    while(aux != NULL){
+    // Procura pela posição correta para inserção;
+    while(aux){
         auxPai = aux;
 
         if(novoNo->chave < aux->chave)
@@ -53,8 +60,10 @@ void insereNoRB(arvoreRB* arv, noRB* novoNo){
             aux = aux->dir;
     }
 
-    if(novoNo->chave < auxPai->chave)   auxPai->esq = novoNo;
-    else                                auxPai->dir = novoNo;
+    if(novoNo->chave < auxPai->chave) // Caso o for inserido a esquerda de seu pai;
+        auxPai->esq = novoNo;
+    else 
+        auxPai->dir = novoNo; // Caso o for inserido a direita de seu pai;
 
     novoNo->pai = auxPai;
 
@@ -63,9 +72,9 @@ void insereNoRB(arvoreRB* arv, noRB* novoNo){
 
 int removeNoRB(arvoreRB* arv, int valor){
     noRB* aux = arv->sentinela->dir;
-    noRB *substituto, *predecessor;
     char corRemovido;
 
+    // Procura pelo nó a ser removido;
     while(aux && aux->chave != valor){
         if(valor < aux->chave) 
             aux = aux->esq;
@@ -73,10 +82,11 @@ int removeNoRB(arvoreRB* arv, int valor){
             aux = aux->dir;
     }
 
-    if(!aux)    return 0;
+    if(!aux) return 0; // Nó não encontrado;
 
     corRemovido = aux->cor;
 
+    // Caso o nó removido for folha;
     if(!aux->esq && !aux->dir){
         if(aux->pai->esq == aux)
             aux->pai->esq = NULL;
@@ -87,28 +97,25 @@ int removeNoRB(arvoreRB* arv, int valor){
             balanceamentoRemocao(arv, NULL, aux->pai);
     }
 
+    // Caso o nó removido contenha os 2 filhos
     else if(aux->esq && aux->dir){
-        predecessor = aux->esq;
+        noRB* predecessor = aux->esq;
 
+        //Busca pelo PREDECESSOR;
         while(predecessor->dir)
             predecessor = predecessor->dir;
 
-        aux->chave = predecessor->chave;
 
-        if(predecessor->esq){
-            if(predecessor->pai->esq == predecessor)
-                predecessor->pai->esq = predecessor->esq;
-            else
-                predecessor->pai->dir = predecessor->esq;
+        aux->chave = predecessor->chave; //Transferência de dados ao predecessor;
 
-            predecessor->esq->pai = predecessor->pai;
-        }
-        else{
-            if(predecessor->pai->esq == predecessor)
-                predecessor->pai->esq = NULL;
-            else
-                predecessor->pai->dir = NULL;
-        }
+        // Atualização dos ponteiros;
+        if(predecessor->pai->esq == predecessor)
+            predecessor->pai->esq = predecessor->esq;
+        else
+            predecessor->pai->dir = predecessor->esq;
+
+        if(predecessor->esq) predecessor->esq->pai = predecessor->pai;
+        
 
         if(predecessor->cor == 'P')
             balanceamentoRemocao(arv, predecessor->esq, predecessor->pai);
@@ -116,7 +123,9 @@ int removeNoRB(arvoreRB* arv, int valor){
         aux = predecessor;
     }
 
+    // Caso o nó removido contenha apenas o filho a esquerda;
     else if(aux->esq){
+        // Atualização de ponteiros;
         if(aux->pai->esq == aux)
             aux->pai->esq = aux->esq;
         else
@@ -128,7 +137,9 @@ int removeNoRB(arvoreRB* arv, int valor){
             balanceamentoRemocao(arv, aux->esq, aux->pai);
     }
 
+    // Caso o nó removido contenha apenas o filho a direita;
     else if(aux->dir){
+        // Atualização de ponteiros;
         if(aux->pai->esq == aux)
             aux->pai->esq = aux->dir;
         else
@@ -140,10 +151,11 @@ int removeNoRB(arvoreRB* arv, int valor){
             balanceamentoRemocao(arv, aux->dir, aux->pai);
     }
 
-    free(aux);
-
+    free(aux); // Liberação de memória do nó removido;
     return 1;
 }
+
+//////////////////////////Algoritmo de Conversão da Árvore 2-3-4 em Árvore Rubro-Negra////////////////////////////
 
 noRB* converte234(no234* raiz234){
     noRB* raizRB = NULL;
@@ -193,56 +205,72 @@ noRB* converte234(no234* raiz234){
 
 ///////////////////////////////////Métodos de Balanceamento da Árvore/////////////////////////////////////
 void balanceamentoInsercao(arvoreRB* arv, noRB* novoNo){
-    noRB *tio, *avo;
+    noRB *aux = novoNo;
+    noRB *pai = aux->pai;
+    noRB *tio = NULL;
+    noRB *avo = pai->pai;
     
-    while(novoNo->pai && novoNo->pai->cor == 'V'){
-        avo = novoNo->pai->pai;
+    // Avalia o nó enquanto ele não for a raiz seu pai for vermelho;
+    while(pai && pai->cor == 'V'){
+        pai = aux->pai;
+        avo = pai->pai;
 
-        if(novoNo->pai == avo->esq){
+        // Caso o nó esteja a ESQUERDA do avô;
+        if(pai == avo->esq){
             tio = avo->dir;
 
+            // Caso 1: Tio é VERMELHO;
             if(tio && tio->cor == 'V'){
-                novoNo->pai->cor = 'P';
+                pai->cor = 'P';
                 tio->cor = 'P';
                 avo->cor = 'V';
 
-                novoNo = avo;
+                aux = avo; // Nova avaliação para o avô;
             }
 
+            // Casos 2 e 3: Tio é PRETO;
             else{
-                if(novoNo == novoNo->pai->dir){
-                    novoNo = novoNo->pai;
+                // Caso 2: Nó é filho da DIREITA;
+                if(aux == pai->dir){ 
+                    aux = pai;
 
-                    rotacaoEsquerda(novoNo);
-                    
+                    rotacaoEsquerda(aux);
+                    // Vira Caso 3;
                 }
 
-                novoNo->pai->cor = 'P';
+                // Caso 3: Nó é filho da ESQUERDA;
+                pai->cor = 'P';
                 avo->cor = 'V';
 
                 rotacaoDireita(avo);
             }
         }
 
+        // Caso o nó esteja a DIREITA do avô;
         else{
             tio = avo->esq;
 
+            // Caso 1: Tio é VERMELHO;
             if(tio && tio->cor == 'V'){
-                novoNo->pai->cor = 'P';
+                pai->cor = 'P';
                 tio->cor = 'P';
                 avo->cor = 'V';
 
-                novoNo = avo;
+                aux = avo; // Nova avaliação para o avô;
             }
 
-            else{ 
-                if(novoNo == novoNo->pai->esq){
-                    novoNo = novoNo->pai;
+            // Casos 2 e 3: Tio é PRETO;
+            else{
+                // Caso 2: Nó é filho da ESQUERDA;
+                if(aux == pai->esq){
+                    aux = pai;
 
-                    rotacaoDireita(novoNo);
+                    rotacaoDireita(aux);
+                    // Vira Caso 3;
                 }
 
-                novoNo->pai->cor = 'P';
+                // Caso 3: Nó é filho da DIREITA;
+                pai->cor = 'P';
                 avo->cor = 'V';
 
                 rotacaoEsquerda(avo);
@@ -250,101 +278,118 @@ void balanceamentoInsercao(arvoreRB* arv, noRB* novoNo){
         }
     }
 
-    arv->sentinela->dir->cor = 'P';
+    arv->sentinela->dir->cor = 'P'; // Raiz colorida de preto;
 }
 
 void balanceamentoRemocao(arvoreRB* arv, noRB* noSucessor, noRB* noPai){
-    noRB* irmao;
+    noRB *aux = noSucessor;
+    noRB *pai = noPai;
+    noRB *irmao = NULL;
     
-    while(noSucessor != arv->sentinela->dir && (!noSucessor || noSucessor->cor == 'P')){
-        if(noSucessor == noPai->esq){
-            irmao = noPai->dir;
+    // Avalia o nó enquanto não for a raiz e for preto;
+    while(aux != arv->sentinela->dir && (!aux || aux->cor == 'P')){
+        // Caso o nó for filho da ESQUERDA;
+        if(aux == pai->esq){
+            irmao = pai->dir;
 
+            // Caso 1: Irmão é VERMELHO;
             if(irmao && irmao->cor == 'V'){
                 irmao->cor = 'P';
-                noPai->cor = 'V';
+                pai->cor = 'V';
 
-                rotacaoEsquerda(noPai);
+                rotacaoEsquerda(pai);
 
-                irmao = noPai->dir;
+                irmao = pai->dir;
             }
 
-            if((!irmao->esq || irmao->esq->cor == 'P') && (!irmao->esq || irmao->dir->cor == 'P')){
+            // Caso 2: Ambos os filhos do irmão são PRETOS;
+            if((!irmao->esq || irmao->esq->cor == 'P') && (!irmao->dir || irmao->dir->cor == 'P')){
                 irmao->cor = 'V';
-                noSucessor = noPai;
+                aux = pai; // Reavalia para o pai;
             }
 
+            // Casos 3 e 4: Filho ESQUERDO do irmão é VERMELHO;
             else{ 
+                // Caso 3: Filho DIREITO do irmão é PRETO;
                 if(!irmao->dir || irmao->dir->cor == 'P'){
                     irmao->esq->cor = 'P';
                     irmao->cor = 'V';
 
                     rotacaoDireita(irmao);
 
-                    irmao = noPai->dir;
+                    irmao = pai->dir;
+                    // Vira o Caso 4;
                 }
 
-                irmao->cor = noPai->cor;
-                noPai->cor = 'P';
+                // Caso 4: Ambos os filhos do irmão são VERMELHOS;
+                irmao->cor = pai->cor;
+                pai->cor = 'P';
                 irmao->dir->cor = 'P';
 
-                rotacaoEsquerda(noPai);
+                rotacaoEsquerda(pai);
 
-                noSucessor = arv->sentinela->dir;
+                aux = arv->sentinela->dir; // Força o encerramento do balanceamento;
             }
         }
 
+        // Caso o nó for filho da DIREITA;
         else{
-            irmao = noPai->esq;
+            irmao = pai->esq;
 
+            // Caso 1: Irmão é VERMELHO;
             if(irmao && irmao->cor == 'V'){
                 irmao->cor = 'P';
-                noPai->cor = 'V';
+                pai->cor = 'V';
 
-                rotacaoDireita(noPai);
+                rotacaoDireita(pai);
 
-                irmao = noPai->esq;
+                irmao = pai->esq;
             }
 
-            if((!irmao->esq || irmao->esq->cor == 'P') && (!irmao->esq || irmao->dir->cor == 'P')){
+            // Caso 2: Ambos os filhos do irmão são PRETOS;
+            if((!irmao->esq || irmao->esq->cor == 'P') && (!irmao->dir || irmao->dir->cor == 'P')){
                 irmao->cor = 'V';
-                noSucessor = noPai;
+                aux = pai; // Reavalia para o pai;
             }
 
+            // Casos 3 e 4: Filho DIREITO do irmão é VERMELHO;
             else{ 
+                // Caso 3: Filho ESQUERDO do irmão é PRETO;
                 if(!irmao->esq || irmao->esq->cor == 'P'){
                     irmao->dir->cor = 'P';
                     irmao->cor = 'V';
 
                     rotacaoEsquerda(irmao);
 
-                    irmao = noPai->esq;
+                    irmao = pai->esq;
                 }
 
-                irmao->cor = noPai->cor;
-                noPai->cor = 'P';
+                // Caso 4: Ambos os filhos do irmão são VERMELHOS;
+                irmao->cor = pai->cor;
+                pai->cor = 'P';
                 irmao->esq->cor = 'P';
 
-                rotacaoDireita(noPai);
+                rotacaoDireita(pai);
 
-                noSucessor = arv->sentinela->dir;
+                aux = arv->sentinela->dir; // Força o encerramento do balanceamento;
             }
         }
     }
 
-    noSucessor->cor = 'P';
+    aux->cor = 'P';
 }
 
 void rotacaoEsquerda(noRB* noDesbalanceado){
     noRB* pai = noDesbalanceado->pai;
-    noRB* filho = noDesbalanceado->dir;
+    noRB* filho = noDesbalanceado->dir; // Nó que se tornará pai;
     noRB* neto = filho->esq;
 
-    noDesbalanceado->dir = neto;
+    noDesbalanceado->dir = neto; // Remove a ligação do nó com o filho;
 
-    if(neto)
-        neto->pai = noDesbalanceado;
+    // Caso o neto exista, seu avô se torna seu pai;
+    if(neto) neto->pai = noDesbalanceado;
 
+    // Atualização do pai do filho;
     if(noDesbalanceado == pai->esq)
         pai->esq = filho;
     else
@@ -352,25 +397,31 @@ void rotacaoEsquerda(noRB* noDesbalanceado){
 
     filho->pai = pai;
 
-    filho->esq = noDesbalanceado;
+    // Filho se torna pai de seu pai;
+    filho->esq = noDesbalanceado; 
     noDesbalanceado->pai = filho;
 }
 
 void rotacaoDireita(noRB* noDesbalanceado){
     noRB* pai = noDesbalanceado->pai;
-    noRB* filho = noDesbalanceado->esq;
+    noRB* filho = noDesbalanceado->esq; // Nó que se tornará pai;
     noRB* neto = filho->dir;
 
-    noDesbalanceado->esq = neto;
+    noDesbalanceado->esq = neto; // Remove a ligação do nó com o filho;
 
-    if(neto)    neto->pai = noDesbalanceado;
+    // Caso o neto exista, seu avô se torna seu pai;
+    if(neto) neto->pai = noDesbalanceado;
 
-    if(noDesbalanceado == pai->esq)     pai->esq = filho;
-    else                                pai->dir = filho;
+    // Atualização do pai do filho;
+    if(noDesbalanceado == pai->esq)
+        pai->esq = filho;
+    else
+        pai->dir = filho;
 
     filho->pai = pai;
-    filho->dir = noDesbalanceado;
 
+    // Filho se torna pai de seu pai;
+    filho->dir = noDesbalanceado;
     noDesbalanceado->pai = filho;
 }
 
@@ -392,26 +443,34 @@ void imprimeArvoreRB(arvoreRB* arv){
     imprimeNoRB(arv->sentinela->dir, "", 1);
 }
 
-void imprimeNoRB(noRB* no, const char* prefixo, int is_last){
-    if(no == NULL)
-        return;
+void imprimeNoRB(noRB* no, const char* prefixo, int ultimoNo){
+    if(!no) return;
 
     printf("%s", prefixo);
-    printf(is_last ? "└── " : "├── ");
-    printf("[%d, %c]\n", no->chave, no->cor); // cor: 'V' ou 'P'
+
+    // Printa as arestas da árvore;
+    if(ultimoNo == 1)
+        printf("└── ");
+    else
+        printf("├── ");
+
+    printf("[%d, %c]\n", no->chave, no->cor); // Printa o nó (chave e cor);
 
     char novoPrefixo[1024];
-    if(is_last)
+    if(ultimoNo)
         snprintf(novoPrefixo, sizeof(novoPrefixo), "%s    ", prefixo);
     else
         snprintf(novoPrefixo, sizeof(novoPrefixo), "%s│   ", prefixo);
 
-    // Verifica se tem filhos diferentes de sentinela
-    int temFilhosEsq = (no->esq != NULL);
-    int temFilhosDir = (no->dir != NULL);
+    // Verifica o nó tem filhos;
+    int filhosEsq = 0;
+    int filhosDir = 0;
 
-    if(temFilhosEsq || temFilhosDir){
-        imprimeNoRB(no->esq, novoPrefixo, !temFilhosDir);
+    if(no->esq) filhosEsq = 1;
+    if(no->dir) filhosDir = 1;
+
+    if(filhosEsq || filhosDir){
+        imprimeNoRB(no->esq, novoPrefixo, !filhosDir);
         imprimeNoRB(no->dir, novoPrefixo, 1);
     }
 }
