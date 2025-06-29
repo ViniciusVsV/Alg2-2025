@@ -36,8 +36,9 @@ int main(){
         printf("1. Inserir elemento na árvore 2-3-4\n");
         printf("2. Remover elemento da árvore 2-3-4\n");
         printf("3. Imprimir árvore 2-3-4\n");
-        printf("4. Converter em uma árvore rubro-negra\n");
-        printf("5. Sair\n>");
+        printf("4. Imprimir árvore 2-3-4 em pré-ordem\n");
+        printf("5. Converter em uma árvore rubro-negra\n");
+        printf("6. Sair\n>");
 
         scanf("%d", &acao);
 
@@ -63,13 +64,18 @@ int main(){
                 break;
 
             case 4:
+                printf("Imprimindo em pré-ordem...\n");
+                imprimePreOrdem234(arv234, obtemRaiz234(arv234));
+                break;
+                
+            case 5:
                 printf("Convertendo em uma árvore rubro-negra...\n");
                 setRaiz(arvRB, converte234(obtemRaiz234(arv234), NULL));
                 converteu = 1;
                 printf("Conversão concluida!\n");
                 break;
-
-            case 5:
+                
+            case 6:            
                 printf("Encerrando programa...\n");
                 return 0;
 
@@ -85,7 +91,8 @@ int main(){
         printf("1. Inserir elemento na árvore rubro-negra\n");
         printf("2. Remover elemento da árvore rubro-negra\n");
         printf("3. Imprimir árvore rubro-negra\n");
-        printf("4. Sair\n>");
+        printf("4. Imprimir árvore rubro-negra em pré-ordem\n");
+        printf("5. Sair\n>");
 
         scanf("%d", &acao);
 
@@ -116,6 +123,11 @@ int main(){
                 break;
 
             case 4:
+                printf("Imprimindo árvore rubro-negra em pré ordem...\n");
+                imprimePreOrdemRB(arvRB, retornaRaizRB(arvRB));
+                break;
+                
+            case 5:
                 printf("Encerrando programa...\n");
                 return 0;
 

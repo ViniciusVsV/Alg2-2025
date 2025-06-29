@@ -63,16 +63,21 @@ void rotacaoDireita(noRB* noDesbalanceado);
 /// @param noDesbalanceado Nó a sofrer a rotação;
 void rotacaoEsquerda(noRB* noDesbalanceado);
 
+////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
+
 /// @brief Define a raiz da árvore RB após a conversão;
 /// @param arv Árvore RB a receber a raiz;
 /// @param noRaiz Nó a se tornar raiz;
 void setRaiz(arvoreRB* arv, noRB* noRaiz);
 
-////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
-
 /// @brief Obtém a raiz de uma árvore RB;
 /// @param arv Árvore RB que se busca a raiz;
 noRB* retornaRaizRB(arvoreRB* arv);
+
+/// @brief Imprime uma árvore RB em pré-ordem recursivamente;
+/// @param arv Árvore RB que será impressa;
+/// @param aux Nó a iniciar a rucursão;
+void imprimePreOrdemRB(arvoreRB* arv, noRB* aux);
 
 /// @brief Imprime os elementos de uma árvore RB;
 /// @param arv Árvore RB a ser impressa;

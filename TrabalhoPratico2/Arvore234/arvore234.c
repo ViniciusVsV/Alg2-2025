@@ -504,6 +504,22 @@ int obtemQtdChaves(no234* no){
     return no->qtdChaves;
 }
 
+void imprimePreOrdem234(arvore234* arv, no234* aux){
+    if(!aux) return; // Condição de parada;
+
+    printf("[");
+    for (int i = 0; i < aux->qtdChaves; i++){
+        printf("%d", aux->chaves[i]);
+
+        if(i != aux->qtdChaves - 1) printf(" | ");            
+    }
+    printf("]\n");
+
+    for(int i = 0; i <= aux->qtdChaves; i++){
+        imprimePreOrdem234(arv, aux->filhos[i]);
+    }
+}
+
 void imprimeArvore234(arvore234 *arv){
     no234* raiz = arv->raiz;
 

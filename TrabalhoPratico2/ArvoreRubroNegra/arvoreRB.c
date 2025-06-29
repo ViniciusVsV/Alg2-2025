@@ -449,6 +449,14 @@ noRB* retornaRaizRB(arvoreRB* arv){
     return arv->sentinela->dir;
 }
 
+void imprimePreOrdemRB(arvoreRB* arv, noRB* aux){
+    if(!aux) return; // Condição de parada;
+
+    printf("[%d | %c]\n", aux->chave, aux->cor);
+    imprimePreOrdemRB(arv, aux->esq);
+    imprimePreOrdemRB(arv, aux->dir);
+}
+
 void imprimeArvoreRB(arvoreRB* arv){
     if (arv->sentinela->dir == NULL){
         printf("A árvore está vazia.\n");
@@ -477,7 +485,7 @@ void imprimeNoRB(noRB* no, const char* prefixo, int ultimoNo){
     else
         snprintf(novoPrefixo, sizeof(novoPrefixo), "%s│   ", prefixo);
 
-    // Verifica o nó tem filhos;
+    // Verifica se o nó tem filhos;
     int filhosEsq = 0;
     int filhosDir = 0;
 

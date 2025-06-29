@@ -103,6 +103,11 @@ no234** obtemFilhos(no234* no);
 /// @return Quantidade de chaves do nó
 int obtemQtdChaves(no234* no);
 
+/// @brief Imprime uma árvore 234 em pré-ordem recursivamente;
+/// @param arv Árvore 234 que será impressa;
+/// @param aux Nó a iniciar a rucursão;
+void imprimePreOrdem234(arvore234* arv, no234* aux);
+
 /// @brief Imprime os elementos de uma árvore 2-3-4
 /// @param arv Árvore em questão
 void imprimeArvore234(arvore234 *arv);
