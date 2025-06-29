@@ -6,45 +6,109 @@
 
 int main(){
     arvore234* arv234 = alocaArvore234();
+    arvoreRB* arvRB = alocaArvoreRB();
 
-    insereChaveArvore(arv234, 1);
-    insereChaveArvore(arv234, 2);
-    insereChaveArvore(arv234, 3);
-    insereChaveArvore(arv234, 4);
-    insereChaveArvore(arv234, 5);
-    insereChaveArvore(arv234, 6);
-    insereChaveArvore(arv234, 7);
-    insereChaveArvore(arv234, 8);
-    insereChaveArvore(arv234, 9);
-    insereChaveArvore(arv234, 10);
+    int converteu = 0;
+    int acao, chave;
+    char nomeArquivo[30];
 
-    printf("\nImprimindo árvore 2-3-4...\n");
-    imprimeArvore234(arv234);
+    printf("Digite o nome do arquivo: ");
+    scanf("%s", &nomeArquivo);
 
-    printf("\nRemovendo elementos da árvore 2-3-4...\n");
-    removeChaveArvore(arv234, 1);
-    removeChaveArvore(arv234, 2);
-    removeChaveArvore(arv234, 3);
-    removeChaveArvore(arv234, 4);
-    removeChaveArvore(arv234, 6);
-    removeChaveArvore(arv234, 5);
-    removeChaveArvore(arv234, 8);
-    removeChaveArvore(arv234, 9);
-    removeChaveArvore(arv234, 7);
-    removeChaveArvore(arv234, 10);
+    FILE* arquivo = fopen(nomeArquivo, "r");
+    if(!arquivo){
+        printf("Arquivo não encontrado\n");
+        return 0;
+    }
+    
+    while(!converteu){
+        printf("------------------------------------------\n");
 
-    printf("\nImprimindo árvore 2-3-4 após as remoções...\n");
-    imprimeArvore234(arv234);
+        printf("\nEscolha uma ação:\n\n");
+        printf("1. Inserir elemento na árvore 2-3-4\n");
+        printf("2. Remover elemento da árvore 2-3-4\n");
+        printf("3. Imprimir árvore 2-3-4\n");
+        printf("4. Converter em uma árvore rubro-negra\n");
+        printf("5. Sair\n>");
 
-    /*printf("\nImprimindo árvore 2-3-4 após a remoção...\n");
-    imprimeArvore234(arv234);
+        scanf("%d", &acao);
 
-    arvoreRB* arvRb = alocaArvoreRB();
+        printf("\n------------------------------------------\n");
 
-    printf("\nImprimindo árvore Rubro-Negra...\n");
+        switch(acao){
+            case 1:
+                printf("Digite a chave a ser inserida: ");
+                scanf("%d", &chave);
+                insereChaveArvore(arv234, chave);
+                printf("Elemento inserido com sucesso\n");
+                break;
 
-    noRB* raizArvoreRB = converte234(obtemRaiz234(arv234));
-    setRaiz(arvRb, raizArvoreRB);
+            case 2:
+                printf("Digite a chave a ser removida: ");
+                scanf("%d", &chave);
+                removeChaveArvore(arv234, chave);
+                break;
 
-    imprimeArvoreRB(arvRb);*/
+            case 3:
+                printf("Imprimindo árvore 2-3-4...\n");
+                imprimeArvore234(arv234);
+                break;
+
+            case 4:
+                printf("Convertendo em uma árvore rubro-negra...\n");
+                setRaiz(arvRB, converte234(obtemRaiz234(arv234)));
+                converteu = 1;
+                printf("Conversão concluida!\n");
+                break;
+
+            case 5:
+                printf("Encerrando programa...\n");
+                return 0;
+
+            default:
+                printf("Ação inválida.\n");
+        }
+    }
+
+    while(1){
+        printf("------------------------------------------\n");
+
+        printf("\nEscolha uma ação:\n\n");
+        printf("1. Inserir elemento na árvore rubro-negra\n");
+        printf("2. Remover elemento da árvore rubro-negra\n");
+        printf("3. Imprimir árvore rubro-negra\n");
+        printf("4. Sair\n>");
+
+        scanf("%d", &acao);
+
+        printf("\n------------------------------------------\n");
+
+        switch(acao){
+            case 1:
+                printf("Digite a chave a ser inserida: ");
+                scanf("%d", &chave);
+                noRB* novoNo = alocaNoRB(chave, 'V');
+                insereNoRB(arvRB, novoNo);
+                printf("Elemento inserido com sucesso\n");
+                break;
+
+            case 2:
+                printf("Digite a chave a ser removida: ");
+                scanf("%d", &chave);
+                removeNoRB(arvRB, chave);
+                break;
+
+            case 3:
+                printf("Imprimindo árvore rubro-negra...\n");
+                imprimeArvoreRB(arvRB);
+                break;
+
+            case 4:
+                printf("Encerrando programa...\n");
+                return 0;
+
+            default:
+                printf("Ação inválida.\n");
+        }
+    }
 }

@@ -218,7 +218,7 @@ no234* divideNo(arvore234* arv, no234* pai, no234* noCheio, int chave){
 ////////////////////////////////Métodos de Remoção de Elementos na Árvore/////////////////////////////////
 
 void removeChaveArvore(arvore234 *arv, int chave){
-    if(arv->raiz == NULL){
+    if(arv->raiz->qtdChaves == 0){
         printf("A árvore está vazia.\n");
         return;
     }
@@ -227,11 +227,6 @@ void removeChaveArvore(arvore234 *arv, int chave){
 }
 
 void removeChaveArvoreAux(arvore234* arv, no234* noAtual, int chave){
-    if(arv->raiz == NULL) {
-        printf("A árvore está vazia.\n");
-        return;
-    }
-
     int i = 0;
     
     //Encontrar a posição da chave
@@ -243,14 +238,18 @@ void removeChaveArvoreAux(arvore234* arv, no234* noAtual, int chave){
         if(!noAtual->folha)
             removeChaveArvoreAux(arv, noAtual->filhos[noAtual->qtdChaves], chave);
         
+        printf("Elemento não encontrado\n");
+
         return;
     }
      
     //Chave é maior que a chave atual
     else if(noAtual->chaves[i] > chave){
-        if (!noAtual->folha)
+        if(!noAtual->folha)
             removeChaveArvoreAux(arv, noAtual->filhos[i], chave);
         
+        printf("Elemento não encontrado\n");
+
         return;
     }
     
@@ -275,6 +274,8 @@ void removeChaveArvoreAux(arvore234* arv, no234* noAtual, int chave){
             
             //Reparar a árvore após a remoção
             reparaRemocao(arv, predecessor);
+
+            printf("Elemento removido com sucesso\n");
         }
     }
 }
@@ -287,16 +288,16 @@ void removeChaveNo(no234* no, int chave){
         index++;
 
     //Se a chave não foi encontrada
-    if(index == no->qtdChaves || no->chaves[index] != chave) {
-        printf("Chave %d não encontrada.\n", chave);
+    if(index == no->qtdChaves || no->chaves[index] != chave)
         return;
-    }
 
     //Deslocar as chaves para a esquerda
     for(int i = index; i < no->qtdChaves - 1; i++) 
         no->chaves[i] = no->chaves[i + 1];
 
     no->qtdChaves--;
+
+    printf("Elemento removido com sucesso\n");
 }
 
 void reparaRemocao(arvore234* arv, no234* noAtual){
