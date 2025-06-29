@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 /////////////////////////////////Declaração de Variáveis Globais e Structs////////////////////////////////
+
 struct arvoreRB{
     noRB *sentinela;
 };
@@ -18,6 +19,7 @@ struct noRB{
 };
 
 //////////////////////////////////Métodos de Alocação da Árvore e dos Nós/////////////////////////////////
+
 arvoreRB* alocaArvoreRB(){
     arvoreRB* novaArvore = (arvoreRB*) malloc(sizeof(arvoreRB));
     if(!novaArvore) return NULL;
@@ -45,6 +47,7 @@ noRB* alocaNoRB(int chave, char cor){
 }
 
 //////////////////////////Métodos de Inserção e Remoção de Elementos na Árvore////////////////////////////
+
 void insereNoRB(arvoreRB* arv, noRB* novoNo){
     // Variáveis que percorrerão a árvore;
     noRB* aux = arv->sentinela->dir;
@@ -155,7 +158,7 @@ int removeNoRB(arvoreRB* arv, int valor){
     return 1;
 }
 
-//////////////////////////Algoritmo de Conversão da Árvore 2-3-4 em Árvore Rubro-Negra////////////////////////////
+//////////////////////Algoritmo de Conversão da Árvore 2-3-4 em Árvore Rubro-Negra////////////////////////
 
 noRB* converte234(no234* raiz234){
     noRB* raizRB = NULL;
@@ -204,6 +207,7 @@ noRB* converte234(no234* raiz234){
 }
 
 ///////////////////////////////////Métodos de Balanceamento da Árvore/////////////////////////////////////
+
 void balanceamentoInsercao(arvoreRB* arv, noRB* novoNo){
     noRB *aux = novoNo;
     noRB *pai = aux->pai;
@@ -426,6 +430,7 @@ void rotacaoDireita(noRB* noDesbalanceado){
 }
 
 ////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
+
 void setRaiz(arvoreRB* arv, noRB* noRaiz){
     arv->sentinela->dir = noRaiz;
 }

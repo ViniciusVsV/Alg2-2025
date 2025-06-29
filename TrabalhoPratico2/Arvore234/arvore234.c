@@ -4,21 +4,22 @@
 #include <stdlib.h>
 
 /////////////////////////////////Declaração de Variáveis Globais e Structs////////////////////////////////
+
 int maximoChaves = 3;
 int minimioChaves = 1;
 int maximoFilhos = 4;
 int minimioFilhos = 2;
 
-struct arvore234
-{
+struct arvore234{
     no234* raiz;
     
     int qtdSplit;
+    int qtdMerge;
+    int qtdRotacoes;
     int altura;
 };
 
-struct no234
-{
+struct no234{
     int* chaves;
     no234** filhos;
     no234* pai;
@@ -28,6 +29,7 @@ struct no234
 };
 
 //////////////////////////////////Métodos de Alocação da Árvore e dos Nós/////////////////////////////////
+
 arvore234* alocaArvore234(){
     arvore234* novaArvore = (arvore234*) malloc(sizeof(arvore234));
     if(!novaArvore)
@@ -41,6 +43,8 @@ arvore234* alocaArvore234(){
     }
 
     novaArvore->qtdSplit = 0;
+    novaArvore->qtdMerge = 0;
+    novaArvore->qtdRotacoes = 0;
     novaArvore->altura = 0;
 
     novaArvore->raiz = raiz;
@@ -78,6 +82,7 @@ no234* alocaNo234(int folha){
 }
 
 ////////////////////////////////Métodos de Inserção de Elementos na Árvore////////////////////////////////
+
 void insereChaveArvore(arvore234* arv, int chave){
     no234* aux = arv->raiz;
     int index;
@@ -110,6 +115,45 @@ void insereChaveArvore(arvore234* arv, int chave){
     else{
         insereChaveNoFolha(aux, chave);
     }
+}
+
+void insereChaveNoFolha(no234* noAlvo, int chave){
+    int i = noAlvo->qtdChaves - 1;
+ 
+    //Encontrar a posição correta do vetor de chaves para inserção do novo elemento no nó
+    for(i; i >= 0; i--){
+        if(noAlvo->chaves[i] > chave)
+            noAlvo->chaves[i + 1] = noAlvo->chaves[i];
+
+        else if(noAlvo->chaves[i] < chave)
+            break;
+    }
+
+    noAlvo->chaves[i + 1] = chave;
+
+    noAlvo->qtdChaves++;
+}
+
+void insereChaveNoInterno(no234* noAlvo, int chave, no234* filhoEsquerdo, no234* filhoDireito){
+    int i = noAlvo->qtdChaves - 1;
+ 
+    //Encontrar a posição correta do vetor de chaves para inserção do novo elemento no nó
+    for(i; i >= 0; i--){
+        if(noAlvo->chaves[i] > chave){
+            noAlvo->chaves[i + 1] = noAlvo->chaves[i];
+            noAlvo->filhos[i + 2] = noAlvo->filhos[i + 1];
+        }
+
+        else if(noAlvo->chaves[i] < chave)
+            break;
+    }
+
+    noAlvo->chaves[i + 1] = chave;
+    
+    noAlvo->filhos[i + 1] = filhoEsquerdo;
+    noAlvo->filhos[i + 2] = filhoDireito;
+
+    noAlvo->qtdChaves++;
 }
 
 no234* divideNo(arvore234* arv, no234* pai, no234* noCheio, int chave){
@@ -171,51 +215,255 @@ no234* divideNo(arvore234* arv, no234* pai, no234* noCheio, int chave){
         return noMaior;
 }
 
-void insereChaveNoFolha(no234* noAlvo, int chave){
-    int i = noAlvo->qtdChaves - 1;
- 
-    //Encontrar a posição correta do vetor de chaves para inserção do novo elemento no nó
-    for(i; i >= 0; i--){
-        if(noAlvo->chaves[i] > chave)
-            noAlvo->chaves[i + 1] = noAlvo->chaves[i];
+////////////////////////////////Métodos de Remoção de Elementos na Árvore/////////////////////////////////
 
-        else if(noAlvo->chaves[i] < chave)
-            break;
+void removeChaveArvore(arvore234 *arv, int chave){
+    if(arv->raiz == NULL){
+        printf("A árvore está vazia.\n");
+        return;
     }
 
-    noAlvo->chaves[i + 1] = chave;
-
-    noAlvo->qtdChaves++;
+    removeChaveArvoreAux(arv, arv->raiz, chave);
 }
 
-void insereChaveNoInterno(no234* noAlvo, int chave, no234* filhoEsquerdo, no234* filhoDireito){
-    int i = noAlvo->qtdChaves - 1;
- 
-    //Encontrar a posição correta do vetor de chaves para inserção do novo elemento no nó
-    for(i; i >= 0; i--){
-        if(noAlvo->chaves[i] > chave){
-            noAlvo->chaves[i + 1] = noAlvo->chaves[i];
-            noAlvo->filhos[i + 2] = noAlvo->filhos[i + 1];
-        }
-
-        else if(noAlvo->chaves[i] < chave)
-            break;
+void removeChaveArvoreAux(arvore234* arv, no234* noAtual, int chave){
+    if(arv->raiz == NULL) {
+        printf("A árvore está vazia.\n");
+        return;
     }
 
-    noAlvo->chaves[i + 1] = chave;
+    int i = 0;
     
-    noAlvo->filhos[i + 1] = filhoEsquerdo;
-    noAlvo->filhos[i + 2] = filhoDireito;
+    //Encontrar a posição da chave
+    while(i < noAtual->qtdChaves && noAtual->chaves[i] < chave)
+        i++;
 
-    noAlvo->qtdChaves++;
+    //Filho mais à direita
+    if(i == noAtual->qtdChaves){
+        if(!noAtual->folha)
+            removeChaveArvoreAux(arv, noAtual->filhos[noAtual->qtdChaves], chave);
+        
+        return;
+    }
+     
+    //Chave é maior que a chave atual
+    else if(noAtual->chaves[i] > chave){
+        if (!noAtual->folha)
+            removeChaveArvoreAux(arv, noAtual->filhos[i], chave);
+        
+        return;
+    }
+    
+    //Nó encontrado
+    else{
+        if(noAtual->folha){
+            //Remover a chave e repara depois
+            removeChaveNo(noAtual, chave);
+            reparaRemocao(arv, noAtual);
+        }
+        else{
+            //Encontrar predecessor
+            no234* predecessor = noAtual->filhos[i];
+            while(!predecessor->folha)
+                predecessor = predecessor->filhos[predecessor->qtdChaves];
+            
+            //Substituir a chave pelo predecessor
+            noAtual->chaves[i] = predecessor->chaves[predecessor->qtdChaves - 1];
+            
+            //Remover o predecessor da folha
+            predecessor->qtdChaves--;
+            
+            //Reparar a árvore após a remoção
+            reparaRemocao(arv, predecessor);
+        }
+    }
+}
+
+void removeChaveNo(no234* no, int chave){
+    int index = 0;
+
+    //Encontrar a chave a ser removida
+    while(index < no->qtdChaves && no->chaves[index] < chave)
+        index++;
+
+    //Se a chave não foi encontrada
+    if(index == no->qtdChaves || no->chaves[index] != chave) {
+        printf("Chave %d não encontrada.\n", chave);
+        return;
+    }
+
+    //Deslocar as chaves para a esquerda
+    for(int i = index; i < no->qtdChaves - 1; i++) 
+        no->chaves[i] = no->chaves[i + 1];
+
+    no->qtdChaves--;
+}
+
+void reparaRemocao(arvore234* arv, no234* noAtual){
+    //Se o nó tem chaves suficientes, não precisa reparar
+    if(noAtual->qtdChaves >= minimioChaves)
+        return;
+    
+    //Se é a raiz
+    if(noAtual == arv->raiz) {
+        if(noAtual->qtdChaves == 0){
+            //Raiz vazia
+            no234* raizAntiga = arv->raiz;
+
+            if(!arv->raiz->folha)
+                arv->raiz = arv->raiz->filhos[0];
+            else 
+                arv->raiz = NULL;
+            
+            free(raizAntiga);
+        }
+
+        return;
+    }
+    
+    //Encontrar o pai e o índice do nó atual
+    no234* pai = noAtual->pai;
+    if(pai == NULL) return;
+    
+    int indicePai = 0;
+    while(indicePai <= pai->qtdChaves && pai->filhos[indicePai] != noAtual)
+        indicePai++;
+    
+    //Tentar emprestar do irmão da esquerda
+    if(indicePai > 0 && pai->filhos[indicePai - 1]->qtdChaves > minimioChaves)
+        emprestaEsquerda(arv, pai, indicePai);
+    
+    //Tentar emprestar do irmão da direita
+    else if(indicePai < pai->qtdChaves && pai->filhos[indicePai + 1]->qtdChaves > minimioChaves)
+        emprestaDireita(arv, pai, indicePai);
+    
+    //Juntar com um irmão
+    else{
+        no234* noMesclado;
+
+        //Juntar com irmão da direita
+        if(indicePai == 0)
+            noMesclado = juntaNos(arv, pai, indicePai);
+
+        //Juntar com irmão da esquerda
+        else 
+            noMesclado = juntaNos(arv, pai, indicePai - 1);
+        
+        // Reparar recursivamente o pai
+        reparaRemocao(arv, pai);
+    }
+}
+
+no234* emprestaEsquerda(arvore234* arv, no234* pai, int index){
+    no234* filho = pai->filhos[index];
+    no234* irmaoEsquerdo = pai->filhos[index - 1];
+
+    //Mover todas as chaves do filho uma posição para a direita
+    for(int i = filho->qtdChaves - 1; i >= 0; i--)
+        filho->chaves[i + 1] = filho->chaves[i];
+
+    //Se não for folha, mover os filhos também
+    if(!filho->folha){
+        for(int i = filho->qtdChaves; i >= 0; i--)
+            filho->filhos[i + 1] = filho->filhos[i];
+        
+        //O último filho do irmão esquerdo se torna o primeiro filho do filho
+        filho->filhos[0] = irmaoEsquerdo->filhos[irmaoEsquerdo->qtdChaves];
+    }
+
+    //A chave do pai desce para o filho
+    filho->chaves[0] = pai->chaves[index - 1];
+
+    //A última chave do irmão esquerdo sobe para o pai
+    pai->chaves[index - 1] = irmaoEsquerdo->chaves[irmaoEsquerdo->qtdChaves - 1];
+
+    //Atualizar contadores
+    filho->qtdChaves++;
+    irmaoEsquerdo->qtdChaves--;
+    arv->qtdRotacoes++;
+    
+    return filho;
+}
+
+no234* emprestaDireita(arvore234* arv, no234* pai, int index){
+    no234* filho = pai->filhos[index];
+    no234* irmaoDireito = pai->filhos[index + 1];
+
+    //A chave do pai desce para o final do filho
+    filho->chaves[filho->qtdChaves] = pai->chaves[index];
+
+    //Se não for folha, o primeiro filho do irmão direito se torna o último filho do filho
+    if(!filho->folha)
+        filho->filhos[filho->qtdChaves + 1] = irmaoDireito->filhos[0];
+
+    //A primeira chave do irmão direito sobe para o pai
+    pai->chaves[index] = irmaoDireito->chaves[0];
+
+    //Mover todas as chaves do irmão direito uma posição para a esquerda
+    for(int i = 1; i < irmaoDireito->qtdChaves; i++)
+        irmaoDireito->chaves[i - 1] = irmaoDireito->chaves[i];
+
+    //Se não for folha, mover os filhos também
+    if(!irmaoDireito->folha){
+        for(int i = 1; i <= irmaoDireito->qtdChaves; i++)
+            irmaoDireito->filhos[i - 1] = irmaoDireito->filhos[i];
+    }
+
+    //Atualizar contadores
+    filho->qtdChaves++;
+    irmaoDireito->qtdChaves--;
+    arv->qtdRotacoes++;
+    
+    return filho;
+}
+
+no234* juntaNos(arvore234* arv, no234* pai, int index){
+    no234* filho = pai->filhos[index];
+    no234* irmao = pai->filhos[index + 1];
+
+    //Chave do pai desce e se torna a nova chave no filho
+    filho->chaves[filho->qtdChaves] = pai->chaves[index];
+
+    // Copia chaves do irmão para o final do filho
+    for(int i = 0; i < irmao->qtdChaves; i++)
+        filho->chaves[filho->qtdChaves + 1 + i] = irmao->chaves[i];
+
+    //Copia filhos do irmão
+    if(!filho->folha){
+        for(int i = 0; i <= irmao->qtdChaves; i++)
+            filho->filhos[filho->qtdChaves + 1 + i] = irmao->filhos[i];
+    }
+
+    //Move chaves e filhos do pai para preencher o buraco
+    for(int i = index + 1; i < pai->qtdChaves; i++){
+        pai->chaves[i - 1] = pai->chaves[i];
+        pai->filhos[i] = pai->filhos[i + 1];
+    }
+
+    //Atualiza o número de chaves no filho e no pai
+    filho->qtdChaves += irmao->qtdChaves + 1;
+    pai->qtdChaves--;
+
+    filho->pai = pai;
+
+    arv->qtdMerge++; //Incrementa o contador de merges
+
+    return filho; //Retorna o nó que contém os elementos juntados
 }
 
 ////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
+
 no234* obtemRaiz234(arvore234* arv){
     return arv->raiz;
 }
 int obtemQtdSplit(arvore234* arv){
     return arv->qtdSplit;
+}
+int obtemQtdMerge(arvore234* arv){
+    return arv->qtdMerge;
+}
+int obtemQtdRotacoes(arvore234* arv){
+    return arv->qtdRotacoes;
 }
 int obtemAltura234(arvore234* arv){
     return arv->altura;

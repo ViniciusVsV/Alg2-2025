@@ -1,8 +1,11 @@
 #ifndef ARVORE234
 #define ARVORE234
 
+/////////////////////////////////Declaração de Variáveis Globais e Structs////////////////////////////////
 typedef struct arvore234 arvore234;
 typedef struct no234 no234;
+
+//////////////////////////////////Métodos de Alocação da Árvore e dos Nós/////////////////////////////////
 
 /// @brief Aloca um novo objeto do tipo arvore234
 /// @return Nova árvore criada
@@ -12,6 +15,8 @@ arvore234* alocaArvore234();
 /// @param folha Booleana que dita se o nó criado é folha ou não
 /// @return Novo nó criado
 no234* alocaNo234(int folha);
+
+////////////////////////////////Métodos de Inserção de Elementos na Árvore////////////////////////////////
 
 /// @brief Insere um novo elemento em uma árvore 2-3-4
 /// @param arv Árvore na qual o elemento será inserido
@@ -38,15 +43,42 @@ void insereChaveNoInterno(no234* noAlvo, int chave, no234* filhoEsquerdo, no234*
 /// @return Nó correto para inserção do elemento após a divisão
 no234* divideNo(arvore234* arv, no234* pai, no234* noCheio, int chave);
 
+////////////////////////////////Métodos de Remoção de Elementos na Árvore/////////////////////////////////
+void removeChaveArvore(arvore234 *arv, int chave);
+
+void removeChaveArvoreAux(arvore234* arv, no234* noAtual, int chave);
+
+void removeChaveNo(no234* no, int chave);
+
+void reparaRemocao(arvore234* arv, no234* noAtual);
+
+no234* emprestaEsquerda(arvore234* arv, no234* pai, int index);
+
+no234* emprestaDireita(arvore234* arv, no234* pai, int index);
+
+no234* juntaNos(arvore234* arv, no234* pai, int index);
+
+////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
+
 /// @brief Obtém a raiz de uma dada árvore 2-3-4
 /// @param arv Árvore em questão
 /// @return Nó raiz da árvore
 no234* obtemRaiz234(arvore234* arv);
 
-/// @brief Obtém a quantidade de splits realizado em uma árvore 2-3-4
+/// @brief Obtém a quantidade de splits realizados em uma árvore 2-3-4
 /// @param arv Árvore em questão
 /// @return Quantidade de divisões feitas
 int obtemQtdSplit(arvore234* arv);
+
+/// @brief Obtém a quantidade de merges realizados em uma árvore 2-3-4
+/// @param arv Árvore em questão
+/// @return Quantidade de mesclagens feitas
+int obtemQtdMerge(arvore234* arv);
+
+/// @brief Obtém a quantidade de rotações realizadas em uma árvore 2-3-4
+/// @param arv Árvore em questão
+/// @return Quantidade de rotações feitas
+int obtemQtdRotacoes(arvore234* arv);
 
 /// @brief Obtém a altura de uma dada árvore 2-3-4
 /// @param arv Árvore em questão

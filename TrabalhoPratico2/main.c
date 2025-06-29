@@ -18,27 +18,33 @@ int main(){
     insereChaveArvore(arv234, 9);
     insereChaveArvore(arv234, 10);
 
-    printf("\nImprimindo árvore 2-3-4:\n");
+    printf("\nImprimindo árvore 2-3-4...\n");
+    imprimeArvore234(arv234);
+
+    printf("\nRemovendo elementos da árvore 2-3-4...\n");
+    removeChaveArvore(arv234, 1);
+    removeChaveArvore(arv234, 2);
+    removeChaveArvore(arv234, 3);
+    removeChaveArvore(arv234, 4);
+    removeChaveArvore(arv234, 6);
+    removeChaveArvore(arv234, 5);
+    removeChaveArvore(arv234, 8);
+    removeChaveArvore(arv234, 9);
+    removeChaveArvore(arv234, 7);
+    removeChaveArvore(arv234, 10);
+
+    printf("\nImprimindo árvore 2-3-4 após as remoções...\n");
+    imprimeArvore234(arv234);
+
+    /*printf("\nImprimindo árvore 2-3-4 após a remoção...\n");
     imprimeArvore234(arv234);
 
     arvoreRB* arvRb = alocaArvoreRB();
 
-    /*noRB* no1 = alocaNoRB(1, "V");
-    noRB* no2 = alocaNoRB(2, "V");
-    noRB* no3 = alocaNoRB(3, "V");
-    noRB* no4 = alocaNoRB(4, "V");
-    noRB* no5 = alocaNoRB(5, "V");
-
-    insereNoRB(arvRb, no1);
-    insereNoRB(arvRb, no2);
-    insereNoRB(arvRb, no3);
-    insereNoRB(arvRb, no4);
-    insereNoRB(arvRb, no5);*/
-
-    printf("\nImprimindo árvore Rubro-Negra\n");
+    printf("\nImprimindo árvore Rubro-Negra...\n");
 
     noRB* raizArvoreRB = converte234(obtemRaiz234(arv234));
     setRaiz(arvRb, raizArvoreRB);
 
-    imprimeArvoreRB(arvRb);
+    imprimeArvoreRB(arvRb);*/
 }
