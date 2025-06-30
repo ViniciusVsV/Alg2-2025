@@ -9,12 +9,6 @@
 int porcentagens[] = {10, 20, 35, 50};
 
 int main(){
-    arvore234* arv234 = alocaArvore234();
-    if(!arv234){
-        printf("Erro ao alocar memória para a árvore 2-3-4\n");
-        return 1;
-    }
-    
     arvoreRB* arvRB = alocaArvoreRB();
     if(!arvRB){
         printf("Erro ao alocar memória para a árvore rubro-negra\n");
@@ -30,6 +24,12 @@ int main(){
     printf("TESTANDO ÁRVORE 2-3-4...\n\n");
 
     for(int i = 2; i <= 5; i++){
+        arvore234* arv234 = alocaArvore234();
+        if(!arv234){
+            printf("Erro ao alocar memória para a árvore 2-3-4\n");
+            return 1;
+        }
+
         ////////////////////////////////////////////Teste de Inserção/////////////////////////////////////////////
 
         printf("TESTANDO INSERÇÃO COM %d NÚMEROS...\n\n", (int)pow(10, i));
@@ -50,10 +50,9 @@ int main(){
         fclose(fp);
 
         fim = clock();
-        tempoGasto = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+        tempoGasto = ((double)(fim - inicio) * 1000) / CLOCKS_PER_SEC;
 
         printf("Quantidade de splits: %d\n", obtemQtdSplit(arv234));
-        printf("Quantidade de rotações: %d\n", obtemQtdRotacoes(arv234));
         printf("Altura da árvore: %d\n", calculaAltura234(arv234));
         printf("Quantidade de blocos: %d\n", obtemQtdNos(obtemRaiz234(arv234)));
         printf("Tempo gasto: %f\n\n", tempoGasto);
@@ -67,7 +66,7 @@ int main(){
         setRaiz(arvRB, converte234(obtemRaiz234(arv234), NULL));
 
         fim = clock();
-        tempoGasto = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+        tempoGasto = ((double)(fim - inicio) * 1000) / CLOCKS_PER_SEC;
 
         printf("Tempo gasto: %f\n\n", tempoGasto);
 
@@ -99,6 +98,8 @@ int main(){
             printf("Quantidade de blocos: %d\n", obtemQtdNos(obtemRaiz234(arv234)));
             printf("\n");
         }
+
+        free(arv234);
 
         printf("==============================================================\n\n");
     }
