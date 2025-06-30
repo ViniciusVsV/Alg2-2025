@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <windows.h>
 
 int porcentagens[] = {10, 20, 35, 50};
 
@@ -15,7 +16,7 @@ int main(){
         return 1;
     }
 
-    clock_t inicio, fim;
+    LARGE_INTEGER inicio, fim, frequencia;
     double tempoGasto;
     char nomeArquivo[40];
     int chave;
@@ -43,32 +44,35 @@ int main(){
             return 1;
         }
 
-        inicio = clock();
+        QueryPerformanceFrequency(&frequencia);
+        QueryPerformanceCounter(&inicio);
 
         preencheArvore234(arv234, nomeArquivo);
 
         fclose(fp);
 
-        fim = clock();
-        tempoGasto = ((double)(fim - inicio) * 1000) / CLOCKS_PER_SEC;
+        QueryPerformanceCounter(&fim);
+        tempoGasto = ((double)(fim.QuadPart - inicio.QuadPart) * 1000.0) / frequencia.QuadPart;
 
         printf("Quantidade de splits: %d\n", obtemQtdSplit(arv234));
         printf("Altura da árvore: %d\n", calculaAltura234(arv234));
         printf("Quantidade de blocos: %d\n", obtemQtdNos(obtemRaiz234(arv234)));
-        printf("Tempo gasto: %f\n\n", tempoGasto);
+        printf("Tempo gasto: %lf\n\n", tempoGasto);
 
         ////////////////////////////////////////////Teste de Conversão////////////////////////////////////////////
 
         printf("TESTANDO CONVERSÃO...\n\n");
 
-        inicio = clock();
+        QueryPerformanceFrequency(&frequencia);
+        QueryPerformanceCounter(&inicio);
 
         setRaiz(arvRB, converte234(obtemRaiz234(arv234), NULL));
 
-        fim = clock();
-        tempoGasto = ((double)(fim - inicio) * 1000) / CLOCKS_PER_SEC;
+        QueryPerformanceCounter(&fim);
+        tempoGasto = ((double)(fim.QuadPart - inicio.QuadPart) * 1000.0) / frequencia.QuadPart;
 
-        printf("Tempo gasto: %f\n\n", tempoGasto);
+        printf("Tempo gasto: %lf\n", tempoGasto);
+        printf("Altura da rubro-negra: %d\n\n", calculaAlturaRB(retornaRaizRB(arvRB)));
 
         /////////////////////////////////////////////Teste de Remoção/////////////////////////////////////////////
 
