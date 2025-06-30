@@ -48,6 +48,25 @@ noRB* alocaNoRB(int chave, char cor){
 
 //////////////////////////Métodos de Inserção e Remoção de Elementos na Árvore////////////////////////////
 
+int preencheArvoreRB(arvoreRB* arv, char* nomeArquivo){
+    FILE* arquivo = fopen(nomeArquivo, "r");
+    if(!arquivo)
+        return 0;
+
+    int chave;
+    while(fscanf(arquivo, "%d", &chave) == 1){
+        noRB* novoNo = alocaNoRB(chave, 'V');
+        if(!novoNo)
+            return 0;
+
+        insereNoRB(arv, novoNo);
+    }
+
+    fclose(arquivo);
+
+    return 1;
+}
+
 void insereNoRB(arvoreRB* arv, noRB* novoNo){
     // Variáveis que percorrerão a árvore;
     noRB* aux = arv->sentinela->dir;
@@ -441,6 +460,16 @@ void rotacaoDireita(noRB* noDesbalanceado){
 
 ////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
 
+int calculaAlturaRB(noRB* raiz){
+    if(raiz == NULL)
+        return 0;
+    
+    int alturaEsq = calculaAlturaRB(raiz->esq);
+    int alturaDir = calculaAlturaRB(raiz->dir);
+    
+    return 1 + (alturaEsq > alturaDir ? alturaEsq : alturaDir);
+}
+
 void setRaiz(arvoreRB* arv, noRB* noRaiz){
     arv->sentinela->dir = noRaiz;
 }
@@ -452,7 +481,7 @@ noRB* retornaRaizRB(arvoreRB* arv){
 void imprimePreOrdemRB(arvoreRB* arv, noRB* aux){
     if(!aux) return; // Condição de parada;
 
-    printf("[%d | %c]\n", aux->chave, aux->cor);
+    printf("%d\t%c\n", aux->chave, aux->cor);
     imprimePreOrdemRB(arv, aux->esq);
     imprimePreOrdemRB(arv, aux->dir);
 }

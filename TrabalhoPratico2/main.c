@@ -24,7 +24,7 @@ int main(){
     printf("Digite o nome do arquivo: ");
     scanf("%s", &nomeArquivo);
 
-    if(!preencheArvore(arv234, nomeArquivo)){
+    if(!preencheArvore234(arv234, nomeArquivo)){
         printf("Erro na leitura do arquivo\n");
         return 0;
     }
@@ -61,6 +61,7 @@ int main(){
             case 3:
                 printf("Imprimindo árvore 2-3-4...\n");
                 imprimeArvore234(arv234);
+                printf("Altura da árvore: %d\n", calculaAltura234(arv234));
                 break;
 
             case 4:
@@ -120,6 +121,7 @@ int main(){
             case 3:
                 printf("Imprimindo árvore rubro-negra...\n");
                 imprimeArvoreRB(arvRB);
+                printf("Altura da árvore: %d\n", calculaAlturaRB(retornaRaizRB(arvRB)));
                 break;
 
             case 4:

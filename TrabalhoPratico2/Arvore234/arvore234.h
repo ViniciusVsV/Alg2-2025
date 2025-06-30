@@ -18,7 +18,7 @@ no234* alocaNo234(int folha);
 
 ////////////////////////////////Métodos de Inserção de Elementos na Árvore////////////////////////////////
 
-int preencheArvore(arvore234* arv, char* nomeArquivo);
+int preencheArvore234(arvore234* arv, char* nomeArquivo);
 
 /// @brief Insere um novo elemento em uma árvore 2-3-4
 /// @param arv Árvore na qual o elemento será inserido
@@ -67,6 +67,8 @@ no234* juntaNos(arvore234* arv, no234* pai, int index);
 no234* encontraPai(no234* raiz, no234* filho);
 
 int calculaAltura234(arvore234* arv);
+
+int obtemQtdNos(no234* raiz);
 
 /// @brief Obtém a raiz de uma dada árvore 2-3-4
 /// @param arv Árvore em questão

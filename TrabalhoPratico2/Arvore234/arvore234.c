@@ -76,7 +76,7 @@ no234* alocaNo234(int folha){
 
 ////////////////////////////////Métodos de Inserção de Elementos na Árvore////////////////////////////////
 
-int preencheArvore(arvore234* arv, char* nomeArquivo){
+int preencheArvore234(arvore234* arv, char* nomeArquivo){
     FILE* arquivo = fopen(nomeArquivo, "r");
     if(!arquivo)
         return 0;
@@ -84,6 +84,8 @@ int preencheArvore(arvore234* arv, char* nomeArquivo){
     int chave;
     while(fscanf(arquivo, "%d", &chave) == 1)
         insereChaveArvore(arv, chave);
+
+    fclose(arquivo);
 
     return 1;
 }
@@ -480,6 +482,21 @@ int calculaAltura234(arvore234* arv){
     }
 
     return altura;
+}
+
+int obtemQtdNos(no234* noAtual){
+    if(noAtual == NULL)
+        return 0;
+
+    int contagem = 1; // Conta o nó atual
+
+    // Se não for folha, conta recursivamente os nós em cada subárvore filha
+    if(!noAtual->folha){
+        for(int i = 0; i <= noAtual->qtdChaves; i++) 
+            contagem += obtemQtdNos(noAtual->filhos[i]);
+    }
+
+    return contagem;
 }
 
 no234* obtemRaiz234(arvore234* arv){

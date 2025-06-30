@@ -22,6 +22,8 @@ noRB* alocaNoRB(int chave, char cor);
 
 //////////////////////////Métodos de Inserção e Remoção de Elementos na Árvore////////////////////////////
 
+int preencheArvoreRB(arvoreRB* arv, char* nomeArquivo);
+
 /// @brief Adiciona um novo nó a árvore RB;
 /// @param arv Árvore RB a receber o novo nó;
 /// @param novoNo Nó a ser adicionado;
@@ -64,6 +66,8 @@ void rotacaoDireita(noRB* noDesbalanceado);
 void rotacaoEsquerda(noRB* noDesbalanceado);
 
 ////////////////////////////////////////////Métodos Auxiliares////////////////////////////////////////////
+
+int calculaAlturaRB(noRB* raiz);
 
 /// @brief Define a raiz da árvore RB após a conversão;
 /// @param arv Árvore RB a receber a raiz;
