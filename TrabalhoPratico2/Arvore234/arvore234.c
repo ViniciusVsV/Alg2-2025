@@ -221,7 +221,7 @@ no234* divideNo(arvore234* arv, no234* noCheio, no234* pai, int indicePai){
 ////////////////////////////////Métodos de Remoção de Elementos na Árvore/////////////////////////////////
 
 void removeChaveArvore(arvore234 *arv, int chave){
-    if(arv->raiz->qtdChaves == 0){
+    if(!arv->raiz){
         printf("A árvore está vazia.\n");
         return;
     }

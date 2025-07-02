@@ -71,7 +71,7 @@ int main(){
                 
             case 5:
                 printf("Convertendo em uma árvore rubro-negra...\n");
-                setRaiz(arvRB, converte234(obtemRaiz234(arv234), NULL));
+                setRaiz(arvRB, converte234(obtemRaiz234(arv234), retornaSentilena(arvRB)));
                 converteu = 1;
                 printf("Conversão concluida!\n");
                 break;

@@ -78,6 +78,8 @@ void setRaiz(arvoreRB* arv, noRB* noRaiz);
 /// @param arv Árvore RB que se busca a raiz;
 noRB* retornaRaizRB(arvoreRB* arv);
 
+noRB* retornaSentilena(arvoreRB* arv);
+
 /// @brief Imprime uma árvore RB em pré-ordem recursivamente;
 /// @param arv Árvore RB que será impressa;
 /// @param aux Nó a iniciar a rucursão;

@@ -358,7 +358,7 @@ void balanceamentoRemocao(arvoreRB* arv, noRB* noSucessor, noRB* noPai){
                 irmao->cor = pai->cor;
                 pai->cor = 'P';
                 irmao->dir->cor = 'P';
-
+                
                 rotacaoEsquerda(pai);
 
                 aux = arv->sentinela->dir; // Força o encerramento do balanceamento;
@@ -409,18 +409,21 @@ void balanceamentoRemocao(arvoreRB* arv, noRB* noSucessor, noRB* noPai){
         }
     }
 
-    aux->cor = 'P';
+    if(aux)
+        aux->cor = 'P';
 }
 
 void rotacaoEsquerda(noRB* noDesbalanceado){
     noRB* pai = noDesbalanceado->pai;
+
     noRB* filho = noDesbalanceado->dir; // Nó que se tornará pai;
     noRB* neto = filho->esq;
 
     noDesbalanceado->dir = neto; // Remove a ligação do nó com o filho;
 
     // Caso o neto exista, seu avô se torna seu pai;
-    if(neto) neto->pai = noDesbalanceado;
+    if(neto) 
+        neto->pai = noDesbalanceado;
 
     // Atualização do pai do filho;
     if(noDesbalanceado == pai->esq)
@@ -476,6 +479,10 @@ void setRaiz(arvoreRB* arv, noRB* noRaiz){
 
 noRB* retornaRaizRB(arvoreRB* arv){
     return arv->sentinela->dir;
+}
+
+noRB* retornaSentilena(arvoreRB* arv){
+    return arv->sentinela;
 }
 
 void imprimePreOrdemRB(arvoreRB* arv, noRB* aux){
